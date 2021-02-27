@@ -16,29 +16,30 @@
 class Communication{
     public:
     Communication(){
-
-        sockfd = socket(AF_INET, SOCK_STREAM, 0);
-         memset(&servaddr, 0, sizeof(servaddr));
-        bzero(&servaddr, sizeof(servaddr));
-
-
-
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&servaddr, 0, sizeof(servaddr));
+    bzero(&servaddr, sizeof(servaddr));
     }
+    virtual void run(){}
     char* message;
     int sockfd;
     char buffer[MAXLINE];
     struct sockaddr_in cliaddr, servaddr;
-    virtual void run(){}
-
-
+    int max(int x, int y)
+       {
+           if (x > y)
+                return x;
+              else
+                   return y;
+                }
 };
 
 
 class Client: public Communication{
     public:
-      int n, len;
+    //int n, len;
 
-      Client(){
+    Client(){
     message = "Hello Server";
 
         // Filling server information
@@ -50,10 +51,7 @@ class Client: public Communication{
     void run()
     {
 
-    if (connect(sockfd, (struct sockaddr*)&servaddr,
-    sizeof(servaddr)) < 0) {
-    printf("\n Error : Connect Failed \n");
-    }
+    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {printf("\n Error : Connect Failed \n");}
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "Hello Server");
     write(sockfd, buffer, sizeof(buffer));
@@ -67,44 +65,34 @@ class Client: public Communication{
 
 class Server : public  Communication{
   public:
-int max(int x, int y)
- {
-  if (x > y)
-   return x;
-   else
-   return y;
-  }
     Server(){
     message = "Hello Client";
-bzero(&servaddr, sizeof(servaddr));
         // Filling server information
          servaddr.sin_family = AF_INET;
          servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
          servaddr.sin_port = htons(PORT);
 
-
+         // binding server addr structure to listenfd
+         bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+         listen(sockfd, 10);
+         // clear the descriptor set
+         FD_ZERO(&rset);
+         // get maxfd
+         maxfdp1 = max(sockfd, udpfd) + 1;
     }
- void run()
+
+      int listenfd, connfd, udpfd, nready, maxfdp1;
+   pid_t childpid;
+    fd_set rset;
+      ssize_t n;
+       socklen_t len;
+        const int on = 1;
+       void sig_chld(int);
+
+
+    void run()
   {
-  int listenfd, connfd, udpfd, nready, maxfdp1;
-  //char buffer[MAXLINE];
-  pid_t childpid;
-  fd_set rset;
-  ssize_t n;
-  socklen_t len;
-  const int on = 1;
-  void sig_chld(int);
 
-  // binding server addr structure to listenfd
-   bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-   listen(sockfd, 10);
-
-
-  // clear the descriptor set
-  FD_ZERO(&rset);
-
-  // get maxfd
-  maxfdp1 = max(sockfd, udpfd) + 1;
   for (;;) {
 
   // set listenfd and udpfd in readset
