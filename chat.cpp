@@ -19,13 +19,11 @@ class Communication{
 
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
          memset(&servaddr, 0, sizeof(servaddr));
-
+        bzero(&servaddr, sizeof(servaddr));
 
 
 
     }
-      //int PORT= 5000;
-    //    //int MAXLINE= 1024;
     char* message;
     int sockfd;
     char buffer[MAXLINE];
@@ -42,8 +40,6 @@ class Client: public Communication{
 
       Client(){
     message = "Hello Server";
-    //sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    //memset(&servaddr, 0, sizeof(servaddr));
 
         // Filling server information
         servaddr.sin_family = AF_INET;
@@ -80,9 +76,6 @@ int max(int x, int y)
   }
     Server(){
     message = "Hello Client";
-    //sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    //memset(&servaddr, 0, sizeof(servaddr));
 bzero(&servaddr, sizeof(servaddr));
         // Filling server information
          servaddr.sin_family = AF_INET;
@@ -106,10 +99,6 @@ bzero(&servaddr, sizeof(servaddr));
    bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
    listen(sockfd, 10);
 
-   /* create UDP socket */
-   //udpfd = socket(AF_INET, SOCK_DGRAM, 0);
-   // binding server addr structure to udp sockfd
-   //bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 
   // clear the descriptor set
   FD_ZERO(&rset);
@@ -120,7 +109,6 @@ bzero(&servaddr, sizeof(servaddr));
 
   // set listenfd and udpfd in readset
   FD_SET(sockfd, &rset);
-  //FD_SET(udpfd, &rset);
 
    // select the ready descriptor
    nready = select(maxfdp1, &rset, NULL, NULL, NULL);
@@ -142,18 +130,6 @@ bzero(&servaddr, sizeof(servaddr));
    }
    close(connfd);
    }
-   // if udp socket is readable receive the message.
-   /*if (FD_ISSET(udpfd, &rset)) {
-   len = sizeof(cliaddr);
-   bzero(buffer, sizeof(buffer));
-   printf("\nMessage from UDP client: ");
-   n = recvfrom(udpfd, buffer, sizeof(buffer), 0,
-   (struct sockaddr*)&cliaddr, &len);
-   puts(buffer);
-   sendto(udpfd, (const char*)message, sizeof(buffer), 0,
-   (struct sockaddr*)&cliaddr, sizeof(cliaddr));
-   */
-
   }
  }
 };
@@ -166,11 +142,8 @@ int main(){
 Communication *comm;
 
  int sockfd;
- // char buffer[MAXLINE];
- // char* message = "Hello Server";
   struct sockaddr_in servaddr;
 
-  //int n, len;
   // Creating socket file descriptor
   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
   printf("socket creation failed");
