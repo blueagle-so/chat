@@ -59,6 +59,7 @@ class Client: public Communication{
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
     close(sockfd);
+    exit(0);
     }
 };
 
@@ -130,10 +131,10 @@ int main(){
 
 
 Communication *comm;
-Client *client = new Client();
-if (client->run()==0)comm=new Server();
-else {comm=new Client();}
- comm->run();
+Client *client=new Client();
+if(client->run()==0){comm=new Server();delete(client);}
+else comm = new Client();
+comm->run();
 
 
 
