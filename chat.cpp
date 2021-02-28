@@ -76,9 +76,9 @@ class Server : public  Communication{
          bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
          listen(sockfd, 10);
          // clear the descriptor set
-         FD_ZERO(&rset);
+        // FD_ZERO(&rset);
          // get maxfd
-         maxfdp1 = max(sockfd, udpfd) + 1;
+        // maxfdp1 = max(sockfd, udpfd) + 1;
     }
 
       int listenfd, connfd, udpfd, nready, maxfdp1;
@@ -94,28 +94,30 @@ class Server : public  Communication{
   {
 
   for (;;) {
-
-  // set listenfd and udpfd in readset
+ // clear the descriptor set
+      FD_ZERO(&rset);
+   // get maxfd
+   maxfdp1 = max(sockfd, udpfd) + 1;
   FD_SET(sockfd, &rset);
-
    // select the ready descriptor
    nready = select(maxfdp1, &rset, NULL, NULL, NULL);
 
    // if tcp socket is readable then handle
    // it by accepting the connection
    if (FD_ISSET(sockfd, &rset)) {
-   len = sizeof(cliaddr);
-   connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
-   if ((childpid = fork()) == 0) {
-   close(sockfd);
-   bzero(buffer, sizeof(buffer));
-   printf("Message From TCP client: ");
-   read(connfd, buffer, sizeof(buffer));
-   puts(buffer);
-   write(connfd, (const char*)message, sizeof(buffer));
-   close(connfd);
-   exit(0);
-   }
+    len = sizeof(cliaddr);
+    connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
+    if ((childpid = fork()) == 0) {
+      close(sockfd);
+      bzero(buffer, sizeof(buffer));
+      //printf("Message From TCP client: ");
+      if(read(connfd, buffer, sizeof(buffer)))
+      printf("Message From TCP client: ");
+      puts(buffer);
+      write(connfd, (const char*)message, sizeof(buffer));
+      close(connfd);
+      exit(0);
+    }
    close(connfd);
    }
   }
@@ -130,24 +132,26 @@ int main(){
 Communication *comm;
 
  int sockfd;
-  struct sockaddr_in servaddr;
+   char buffer[MAXLINE];
+       struct sockaddr_in servaddr;
 
-  // Creating socket file descriptor
-  if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-  printf("socket creation failed");
-  exit(0);
-  }
-  memset(&servaddr, 0, sizeof(servaddr));
-  // Filling server information
-  servaddr.sin_family = AF_INET;
-  servaddr.sin_port = htons(PORT);
-  servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  if (connect(sockfd, (struct sockaddr*)&servaddr,
-  sizeof(servaddr)) < 0) {
-  comm=new Server();
-  }else {comm=new Client();}
+         int n, len;
+           // Creating socket file descriptor
+              if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+                printf("socket creation failed");
+                  exit(0);
+                    }
+                      memset(&servaddr, 0, sizeof(servaddr));
+                        // Filling server information
+                          servaddr.sin_family = AF_INET;
+                            servaddr.sin_port = htons(PORT);
+                              servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+                                if (connect(sockfd, (struct sockaddr*)&servaddr,
+                                  sizeof(servaddr)) < 0) {
+                                    comm=new Server();
+                                      }else {comm=new Client();}
 
-    comm->run();
+                                          comm->run();
 
 
 
