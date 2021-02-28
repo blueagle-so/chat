@@ -50,7 +50,6 @@ class Client: public Communication{
     }
     int run()
     {
-
     if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "Hello Server");
@@ -58,9 +57,10 @@ class Client: public Communication{
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
-    close(sockfd);
-    exit(0);
-    }
+    //close(sockfd);
+    //exit(0);
+
+}
 };
 
 
