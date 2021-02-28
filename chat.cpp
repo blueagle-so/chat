@@ -20,7 +20,7 @@ class Communication{
     memset(&servaddr, 0, sizeof(servaddr));
     bzero(&servaddr, sizeof(servaddr));
     }
-    virtual void run(){}
+    virtual int run(){}
     char* message;
     int sockfd;
     char buffer[MAXLINE];
@@ -48,10 +48,10 @@ class Client: public Communication{
         servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     }
-    void run()
+    int run()
     {
 
-    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {printf("\n Error : Connect Failed \n");}
+    if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "Hello Server");
     write(sockfd, buffer, sizeof(buffer));
@@ -90,7 +90,7 @@ class Server : public  Communication{
        void sig_chld(int);
 
 
-    void run()
+    int run()
   {
 
   for (;;) {
@@ -130,28 +130,10 @@ int main(){
 
 
 Communication *comm;
-
- int sockfd;
-   char buffer[MAXLINE];
-       struct sockaddr_in servaddr;
-
-         int n, len;
-           // Creating socket file descriptor
-              if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-                printf("socket creation failed");
-                  exit(0);
-                    }
-                      memset(&servaddr, 0, sizeof(servaddr));
-                        // Filling server information
-                          servaddr.sin_family = AF_INET;
-                            servaddr.sin_port = htons(PORT);
-                              servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-                                if (connect(sockfd, (struct sockaddr*)&servaddr,
-                                  sizeof(servaddr)) < 0) {
-                                    comm=new Server();
-                                      }else {comm=new Client();}
-
-                                          comm->run();
+Client *client = new Client();
+if (client->run()==0)comm=new Server();
+else {comm=new Client();}
+ comm->run();
 
 
 
