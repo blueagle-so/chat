@@ -25,13 +25,6 @@ class Communication{
     int sockfd;
     char buffer[MAXLINE];
     struct sockaddr_in cliaddr, servaddr;
-    int max(int x, int y)
-       {
-           if (x > y)
-                return x;
-              else
-                   return y;
-                }
 };
 
 
@@ -58,9 +51,7 @@ class Client: public Communication{
         FD_ZERO(&rfds);
        FD_SET(0, &rfds);
        // Wait up to five seconds.
-      tv.tv_sec = 5;
-       tv.tv_usec = 0;
-       retval = select(1, &rfds, NULL, NULL, &tv);
+       retval = select(1, &rfds, NULL, NULL, NULL);
        // Don't rely on the value of tv now!
        ///if (retval == -1)
       //perror("select()");
@@ -74,13 +65,29 @@ class Client: public Communication{
         sockfd = socket(AF_INET, SOCK_STREAM, 0);
       if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
     memset(buffer, 0, sizeof(buffer));
-    strcpy(buffer, "Hello Server");
+    //strcpy(buffer, "Hello Server");
     read(0, buffer, sizeof(buffer));
     write(sockfd, buffer, sizeof(buffer));
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
     close(sockfd);
+    }
+   
+    if(FD_ISSET(sockfd, &rfds)){
+
+    
+  sockfd = socket(AF_INET, SOCK_STREAM, 0);
+  if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
+          memset(buffer, 0, sizeof(buffer));
+	    // strcpy(buffer, "Hello Server");
+	        read(sockfd, buffer, sizeof(buffer));
+	      //     write(sockfd, buffer, sizeof(buffer));
+	       printf("Message from server: ");
+        read(sockfd, buffer, sizeof(buffer));
+    puts(buffer);
+    close(sockfd);    
+    
     }
       }
     exit(0);
@@ -123,9 +130,10 @@ class Server : public  Communication{
  // clear the descriptor set
       FD_ZERO(&rset);
    // get maxfd
-   maxfdp1 = max(sockfd, udpfd) + 1;
+   maxfdp1 =  10;
   FD_SET(sockfd, &rset);
-   // select the ready descriptor
+    FD_SET(0, &rset); 
+  // select the ready descriptor
    nready = select(maxfdp1, &rset, NULL, NULL, NULL);
 
    // if tcp socket is readable then handle
@@ -146,6 +154,23 @@ class Server : public  Communication{
     }
    close(connfd);
    }
+    if (FD_ISSET(0, &rset)) {
+    len = sizeof(cliaddr);
+    connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
+    if ((childpid = fork()) == 0) {
+   close(sockfd);
+    bzero(buffer, sizeof(buffer));
+    //printf("Message From TCP client: ");
+    read(0, buffer, sizeof(buffer));
+     //printf("Message From stdin: ");
+     //puts(buffer);
+      write(connfd, (const char*)buffer, sizeof(buffer));
+     close(connfd);
+      exit(0);
+      }
+ 	}
+   close(connfd); 
+  
   }
  }
 };

@@ -1,36 +1,86 @@
-     #include <stdio.h>
-       #include <stdlib.h>
-       #include <sys/time.h>
-       #include <sys/types.h>
-       #include <unistd.h>
+// Server program 
+ #include <arpa/inet.h> 
+ #include <errno.h> 
+ #include <netinet/in.h> 
+ #include <signal.h> 
+ #include <stdio.h> 
+ #include <stdlib.h> 
+ #include <strings.h> 
+ #include <sys/socket.h> 
+ #include <sys/types.h> 
+ #include <unistd.h> 
+ #define PORT 5000 
+ #define MAXLINE 1024 
+					int main() 
+ 						{ 
+ 							int listenfd, connfd, udpfd, nready, maxfdp1; 
+ 								char buffer[MAXLINE]; 
+ 									pid_t childpid; 
+ 										fd_set rset; 
+ 											ssize_t n; 
+ 												socklen_t len; 
+ 													const int on = 1; 
+ 														struct sockaddr_in cliaddr, servaddr; 
+ 															char* message = "Hello Client"; 
+ 																void sig_chld(int); 
 
-       int
-              main(void)
-         {
-         fd_set rfds;
-         struct timeval tv;
-        int retval;
+ 																	/* create listening TCP socket */
+ 																		listenfd = socket(AF_INET, SOCK_STREAM, 0); 
+ 																			bzero(&servaddr, sizeof(servaddr)); 
+ 																				servaddr.sin_family = AF_INET; 
+ 																					servaddr.sin_addr.s_addr = htonl(INADDR_ANY); 
+ 																						servaddr.sin_port = htons(PORT); 
 
-      /* Watch stdin (fd 0) to see when it has input. */
+ 																							// binding server addr structure to listenfd 
+ 																								bind(listenfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
+ 																									listen(listenfd, 10); 
 
-      FD_ZERO(&rfds);
-      FD_SET(0, &rfds);
+ 																										/* create UDP socket */
+ 																											udpfd = socket(AF_INET, SOCK_DGRAM, 0); 
+ 																												// binding server addr structure to udp sockfd 
+ 																													bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
 
-    /* Wait up to five seconds. */
+ 																														// clear the descriptor set 
+ 																															FD_ZERO(&rset); 
 
-        tv.tv_sec = 5;
-       tv.tv_usec = 0;
+																																// get maxfd 
+ 																																	maxfdp1 = listenfd + 10; 
+ 																																		for (;;) { 
 
-    retval = select(1, &rfds, NULL, NULL, &tv);
-    /* Don't rely on the value of tv now! */
+ 																																				// set listenfd and udpfd in readset 
+ 													FD_SET(listenfd, &rset); 
+ 													FD_SET(udpfd, &rset); 
+ 														// select the ready descriptor 
+ 																					nready = select(maxfdp1, &rset, NULL, NULL, NULL); 
 
-     if (retval == -1)
-      perror("select()");
-     else if (retval)
-     printf("Data is available now.\n");
-     /* FD_ISSET(0, &rfds) will be true. */
-     else
-     printf("No data within five seconds.\n");
+												// if tcp socket is readable then handle 
+ 											// it by accepting the connection 
+ 											if (FD_ISSET(listenfd, &rset)) { 
+ 											len = sizeof(cliaddr); 
+ 											connfd = accept(listenfd, (struct sockaddr*)&cliaddr, &len); 
+ 											if ((childpid = fork()) == 0) { 
+ 												close(listenfd); 
+ 												bzero(buffer, sizeof(buffer)); 
+ 											printf("Message From TCP client: "); 
+ 											read(connfd, buffer, sizeof(buffer)); 
+ 											puts(buffer); 
+ 											write(connfd, (const char*)message, sizeof(buffer)); 
+ 											close(connfd); 
+ 																					exit(0); 
+ 											} 
+ 											close(connfd); 
+ 											} 
+ 											// if udp socket is readable receive the message. 
+ 											if (FD_ISSET(udpfd, &rset)) { 
+ 											len = sizeof(cliaddr); 
+ 											bzero(buffer, sizeof(buffer)); 
+ 											printf("\nMessage from UDP client: "); 
+ 											n = recvfrom(udpfd, buffer, sizeof(buffer), 0, 
+ 											(struct sockaddr*)&cliaddr, &len); 
+ 	puts(buffer); 
+ 											sendto(udpfd, (const char*)message, sizeof(buffer), 0, 
+ 											(struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
+ 											} 
+ 	} 
+ 											} 
 
-   exit(EXIT_SUCCESS);
-      }
