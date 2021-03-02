@@ -19,7 +19,7 @@ class Communication{
     //    //int MAXLINE= 1024;
     char* message;
     int sockfd;
-    virtual struct sockaddr_in addr;
+    struct sockaddr_in servaddr,cliaddr;
     virtual void run(){}
 
 
