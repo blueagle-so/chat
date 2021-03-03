@@ -79,7 +79,8 @@ for(;;){
    /// select(10, &rset, NULL, NULL, NULL);
  if (FD_ISSET(sockfd, &rset)){
      read(sockfd, buffer, sizeof(buffer)); 
-	puts(buffer);
+printf("Message from server: ");
+     puts(buffer);
  
  }
  }
