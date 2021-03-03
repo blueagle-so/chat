@@ -13,18 +13,27 @@
  #define MAXLINE 1024
  #include <string.h>
 //#include "chat.h"
+typedef struct {
+int socket;
+struct sockaddr_in addres;
+char* message;
+char buffer[MAXLINE];
+} Peer;
+
+
 class Communication{
     public:
     Communication(){
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&servaddr, 0, sizeof(servaddr));
-    bzero(&servaddr, sizeof(servaddr));
+    peer.socket = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&peer.addres, 0, sizeof(peer.addres));
+    bzero(&peer.addres, sizeof(peer.addres));
     }
     virtual int run(){}
-    char* message;
-    int sockfd;
-    char buffer[MAXLINE];
-    struct sockaddr_in cliaddr, servaddr;
+    Peer peer;
+    //char* message;
+    //int sockfd;
+    //char buffer[MAXLINE];
+    //struct sockaddr_in cliaddr, servaddr;
 };
 
 
@@ -33,12 +42,12 @@ class Client: public Communication{
     //int n, len;
 
     Client(){
-    message = "Hello Server";
+    peer.message = "Hello Server";
 
         // Filling server information
-        servaddr.sin_family = AF_INET;
-        servaddr.sin_port = htons(PORT);
-        servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        peer.addres.sin_family = AF_INET;
+        peer.addres.sin_port = htons(PORT);
+        peer.addres.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     }
     int run()
@@ -50,6 +59,7 @@ class Client: public Communication{
        // Watch stdin (fd 0) to see when it has input.
         FD_ZERO(&rfds);
        FD_SET(0, &rfds);
+       FD_SET(peer.socket,&rfds);
        // Wait up to five seconds.
        retval = select(1, &rfds, NULL, NULL, NULL);
        // Don't rely on the value of tv now!
@@ -62,31 +72,31 @@ class Client: public Communication{
    // printf("No data within five seconds.\n");
 
 
-        sockfd = socket(AF_INET, SOCK_STREAM, 0);
-      if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
-    memset(buffer, 0, sizeof(buffer));
+        peer.socket = socket(AF_INET, SOCK_STREAM, 0);
+      if (connect(peer.socket, (struct sockaddr*)&peer.addres, sizeof(peer.addres)) < 0) {return 0;}
+    memset(peer.buffer, 0, sizeof(peer.buffer));
     //strcpy(buffer, "Hello Server");
-    read(0, buffer, sizeof(buffer));
-    write(sockfd, buffer, sizeof(buffer));
+    read(0, peer.buffer, sizeof(peer.buffer));
+    write(peer.socket, peer.buffer, sizeof(peer.buffer));
     printf("Message from server: ");
-    read(sockfd, buffer, sizeof(buffer));
-    puts(buffer);
-    close(sockfd);
+    read(peer.socket, peer.buffer, sizeof(peer.buffer));
+    puts(peer.buffer);
+    close(peer.socket);
     }
    
-    if(FD_ISSET(sockfd, &rfds)){
+    if(FD_ISSET(peer.socket, &rfds)){
 
     
-  sockfd = socket(AF_INET, SOCK_STREAM, 0);
-  if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {return 0;}
-          memset(buffer, 0, sizeof(buffer));
+  peer.socket = socket(AF_INET, SOCK_STREAM, 0);
+  if (connect(peer.socket, (struct sockaddr*)&peer.addres, sizeof(peer.addres)) < 0) {return 0;}
+          memset(peer.buffer, 0, sizeof(peer.buffer));
 	    // strcpy(buffer, "Hello Server");
-	        read(sockfd, buffer, sizeof(buffer));
+	        read(peer.socket, peer.buffer, sizeof(peer.buffer));
 	      //     write(sockfd, buffer, sizeof(buffer));
 	       printf("Message from server: ");
-        read(sockfd, buffer, sizeof(buffer));
-    puts(buffer);
-    close(sockfd);    
+        read(peer.socket, peer.buffer, sizeof(peer.buffer));
+    puts(peer.buffer);
+    close(peer.socket);    
     
     }
       }
@@ -99,15 +109,15 @@ class Client: public Communication{
 class Server : public  Communication{
   public:
     Server(){
-    message = "Hello Client";
+    peer.message = "Hello Client";
         // Filling server information
-         servaddr.sin_family = AF_INET;
-         servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-         servaddr.sin_port = htons(PORT);
+         peer.addres.sin_family = AF_INET;
+         peer.addres.sin_addr.s_addr = htonl(INADDR_ANY);
+         peer.addres.sin_port = htons(PORT);
 
          // binding server addr structure to listenfd
-         bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-         listen(sockfd, 10);
+         bind(peer.socket, (struct sockaddr*)&peer.addres, sizeof(peer.addres));
+         listen(peer.socket, 10);
          // clear the descriptor set
         // FD_ZERO(&rset);
          // get maxfd
@@ -131,40 +141,40 @@ class Server : public  Communication{
       FD_ZERO(&rset);
    // get maxfd
    maxfdp1 =  10;
-  FD_SET(sockfd, &rset);
+  FD_SET(peer.socket, &rset);
     FD_SET(0, &rset); 
   // select the ready descriptor
    nready = select(maxfdp1, &rset, NULL, NULL, NULL);
 
    // if tcp socket is readable then handle
    // it by accepting the connection
-   if (FD_ISSET(sockfd, &rset)) {
-    len = sizeof(cliaddr);
-    connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
+   if (FD_ISSET(peer.socket, &rset)) {
+    len = sizeof(peer.addres);
+    connfd = accept(peer.socket, (struct sockaddr*)&peer.addres, &len);
     if ((childpid = fork()) == 0) {
-      close(sockfd);
-      bzero(buffer, sizeof(buffer));
+      close(peer.socket);
+      bzero(peer.buffer, sizeof(peer.buffer));
       //printf("Message From TCP client: ");
-      if(read(connfd, buffer, sizeof(buffer)))
+      if(read(connfd, peer.buffer, sizeof(peer.buffer)))
       printf("Message From TCP client: ");
-      puts(buffer);
-      write(connfd, (const char*)message, sizeof(buffer));
+      puts(peer.buffer);
+      write(connfd, (const char*)peer.message, sizeof(peer.buffer));
       close(connfd);
       exit(0);
     }
    close(connfd);
    }
     if (FD_ISSET(0, &rset)) {
-    len = sizeof(cliaddr);
-    connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
+    len = sizeof(peer.addres);
+    connfd = accept(peer.socket, (struct sockaddr*)&peer.addres, &len);
     if ((childpid = fork()) == 0) {
-   close(sockfd);
-    bzero(buffer, sizeof(buffer));
+   close(peer.socket);
+    bzero(peer.buffer, sizeof(peer.buffer));
     //printf("Message From TCP client: ");
-    read(0, buffer, sizeof(buffer));
+    read(0, peer.buffer, sizeof(peer.buffer));
      //printf("Message From stdin: ");
      //puts(buffer);
-      write(connfd, (const char*)buffer, sizeof(buffer));
+      write(connfd, (const char*)peer.buffer, sizeof(peer.buffer));
      close(connfd);
       exit(0);
       }
