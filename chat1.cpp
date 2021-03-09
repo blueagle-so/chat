@@ -50,7 +50,7 @@ class Client: public Communication{
     }
     memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "Hello Server");
-    //write(sockfd, buffer, sizeof(buffer));
+    write(sockfd, buffer, sizeof(buffer));
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);

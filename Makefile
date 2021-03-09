@@ -3,7 +3,8 @@ All:
 	g++ chat1.cpp -o chat1 -fpermissive
 	./chat &
 	./chat1
-	#pkill chat
+	pkill chat
+	pkill chat1
 
 push:
 	git add .
