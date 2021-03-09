@@ -631,10 +631,10 @@ Communication *comm;
 	                             //     comm->run();
 	   
 
-//  Server server;
-//  server.run();
-  Client client;
-  client.run();
+  Server server;
+  server.run();
+//  Client client;
+//  client.run();
 
 
 
