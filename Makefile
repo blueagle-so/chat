@@ -2,9 +2,10 @@ All:
 	g++ chat.cpp -o chat  -fpermissive
 	g++ chat1.cpp -o chat1 -fpermissive
 	./chat &
-	./chat1
-	pkill chat
-	pkill chat1
+	telnet 127.0.0.1 3111
+	#./chat1
+	#pkill chat
+	#pkill chat1
 
 push:
 	git add .
