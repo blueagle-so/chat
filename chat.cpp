@@ -63,203 +63,101 @@ class Client: public Communication{
 
 
 #include <stdio.h>
-
 #include <stdlib.h>
-
 #include <string.h>
-
 #include <sys/time.h>
-
 #include <sys/types.h>
-
 #include <sys/socket.h>
-
 #include <netinet/in.h>
-
 #include <errno.h>
-
 #include <unistd.h>
-
 /* BufferLength is 100 bytes */
-
 #define BufferLength 100
-
 /* Server port number */
-
 #define SERVPORT 3111
-
 class Server : public Communication{
 		public:
-
     /* Variable and structure definitions. */
-
     int sd, sd2, rc, length = sizeof(int);
-
     int totalcnt = 0, on = 1;
-
     char temp;
-
       char buffer[BufferLength];
-
        struct sockaddr_in serveraddr;
-
       struct sockaddr_in their_addr;
-
-					         
-
-									        fd_set read_fd;
-
-										        struct timeval timeout;
-
-									        /*timeout.tv_sec = 15;*/
-
-									        /*timeout.tv_usec = 0;*/	
-													
-											Server()
-
-											{
+      fd_set read_fd;
+      struct timeval timeout;
+       /*timeout.tv_sec = 15;*/
+       /*timeout.tv_usec = 0;*/	
+	Server()
+	{
 	 timeout.tv_sec = 15;
-
          timeout.tv_usec = 0;    
-
-
 	/* The socket() function returns a socket descriptor */
-
 	/* representing an endpoint. The statement also */
-
 	/* identifies that the INET (Internet Protocol) */
-
  	/* address family with the TCP transport (SOCK_STREAM) */
-
 	/* will be used for this socket. */
-
  	/************************************************/
-
  	/* Get a socket descriptor */
-
 	if((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-
 	{
-
 	perror("Server-socket() error");
-
 	/* Just exit */
-
 	exit (-1);
-
 	}
-
 	else
-
 	printf("Server-socket() is OK\n");
-
-																		 
-
 	/* The setsockopt() function is used to allow */
-
 	/* the local address to be reused when the server */
-
 	/* is restarted before the required wait time */
-
 	/* expires. */
-
 	/***********************************************/
-
 	/* Allow socket descriptor to be reusable */
-
 	if((rc = setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
-
 	{
-
 	perror("Server-setsockopt() error");
-
 	close(sd);
-
 	exit (-1);
-
 	}
-
 	else
-
 	printf("Server-setsockopt() is OK\n");
-
-																				 
-
 	/* bind to an address */
-
 	memset(&serveraddr, 0, sizeof(struct sockaddr_in));
-
 	serveraddr.sin_family = AF_INET;
-
 	serveraddr.sin_port = htons(SERVPORT);
-
 	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-																								/*printf("Using %s, listening at %d\n", inet_ntoa(serveraddr.sin_addr), SERVPORT);*/
-
-
+	/*printf("Using %s, listening at %d\n", inet_ntoa(serveraddr.sin_addr), SERVPORT);*/
 	/* After the socket descriptor is created, a bind() */
-
 	/* function gets a unique name for the socket. */
-
 	/* In this example, the user sets the */
-
 	/* s_addr to zero, which allows the system to */
-
 	/* connect to any client that used port 3005. */
-
 	if((rc = bind(sd, (struct sockaddr *)&serveraddr, sizeof(serveraddr))) < 0)
-
 	{
-
 	perror("Server-bind() error");
-
-											/* Close the socket descriptor */
-																															close(sd);
-
+	/* Close the socket descriptor */
 	/* and just exit */
-
-											exit(-1);
-
+	exit(-1);
 	}
-
 	else
-
 	printf("Server-bind() is OK\n");
-
-																 
 	/* The listen() function allows the server to accept */
-
 	/* incoming client connections. In this example, */
-
 	/* the backlog is set to 10. This means that the */
-
 	/* system can queue up to 10 connection requests before */
-
 	/* the system starts rejecting incoming requests.*/
-
 	/*************************************************/
-
 	/* Up to 10 clients can be queued */
-
 	if((rc = listen(sd, 10)) < 0)
-
 	{
-
         perror("Server-listen() error");
-
         close(sd);
-
         exit (-1);
-
     	}
-
 	else
-
 	printf("Server-Ready for client connection...\n");
-
 	}
-											void run(){
+	void run(){
 
 											/* The server will accept a connection request */
 
@@ -506,97 +404,6 @@ class Server : public Communication{
 
 
 
-
-
-
-
-class Server1 : public  Communication{
-  public:
-int max(int x, int y)
- {
-  if (x > y)
-   return x;
-   else
-   return y;
-  }
-    Server1(){
-    message = "Hello Client";
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-
-    memset(&servaddr, 0, sizeof(servaddr));
-bzero(&servaddr, sizeof(servaddr));
-        // Filling server information
-         servaddr.sin_family = AF_INET;
-         servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-         servaddr.sin_port = htons(PORT);
-
-
-    }
- void run()
-  {
-  int listenfd, connfd, udpfd, nready, maxfdp1;
-  char buffer[MAXLINE];
-  pid_t childpid;
-  fd_set rset;
-  ssize_t n;
-  socklen_t len;
-  const int on = 1;
-  void sig_chld(int);
-
-  // binding server addr structure to listenfd
-   bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-   listen(sockfd, 10);
-
-   /* create UDP socket */
-   udpfd = socket(AF_INET, SOCK_DGRAM, 0);
-   // binding server addr structure to udp sockfd
-   bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-
-  // clear the descriptor set
-  FD_ZERO(&rset);
-
-  // get maxfd
-  maxfdp1 = max(sockfd, udpfd) + 1;
-  for (;;) {
-
-  // set listenfd and udpfd in readset
-  FD_SET(sockfd, &rset);
-  FD_SET(udpfd, &rset);
-
-   // select the ready descriptor
-   nready = select(maxfdp1, &rset, NULL, NULL, NULL);
-
-   // if tcp socket is readable then handle
-   // it by accepting the connection
-   if (FD_ISSET(sockfd, &rset)) {
-   len = sizeof(cliaddr);
-   connfd = accept(sockfd, (struct sockaddr*)&cliaddr, &len);
-   if ((childpid = fork()) == 0) {
-   close(sockfd);
-   bzero(buffer, sizeof(buffer));
-   printf("Message From TCP client: ");
-   read(connfd, buffer, sizeof(buffer));
-   puts(buffer);
-   write(connfd, (const char*)message, sizeof(buffer));
-   close(connfd);
-   exit(0);
-   }
-   close(connfd);
-   }
-   // if udp socket is readable receive the message.
-   if (FD_ISSET(udpfd, &rset)) {
-   len = sizeof(cliaddr);
-   bzero(buffer, sizeof(buffer));
-   printf("\nMessage from UDP client: ");
-   n = recvfrom(udpfd, buffer, sizeof(buffer), 0,
-   (struct sockaddr*)&cliaddr, &len);
-   puts(buffer);
-   sendto(udpfd, (const char*)message, sizeof(buffer), 0,
-   (struct sockaddr*)&cliaddr, sizeof(cliaddr));
-   }
-  }
- }
-};
 
 
 int main(){
