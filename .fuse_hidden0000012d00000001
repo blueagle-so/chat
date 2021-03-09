@@ -314,7 +314,7 @@ class Server : public Communication{
 
 	FD_SET(sd2, &read_fd);
 
-	rc = select(sd2+1, NULL, &read_fd, NULL, NULL);
+	rc = select(sd2+1, &read_fd, NULL, NULL, NULL);
 
 	if((rc == 1) && (FD_ISSET(sd2, &read_fd)))
 
@@ -342,9 +342,8 @@ class Server : public Communication{
 
 	/* read() from client */
 
-	//rc = read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
+	rc = read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
 
-	rc = write(sd2,"hello world",15);
 	if(rc < 0)
 
 	{
@@ -379,7 +378,7 @@ class Server : public Communication{
 
 	totalcnt += rc;
 
-	printf("Server-write() is  OK\n");
+	printf("Server-read() is OK\n");
 
 	}
 
