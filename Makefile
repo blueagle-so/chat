@@ -8,4 +8,5 @@ All:
 push:
 	git add .
 	git commit -m "see web page"
-	git push origin HEAD:remake
+	git push
+	#git push origin HEAD:remake
