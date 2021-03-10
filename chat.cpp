@@ -10,9 +10,6 @@
  #define PORT 3111 
  #define MAXLINE 1024
  #include <string.h>
-<<<<<<< HEAD
-=======
-//#include "chat.h"
 
 typedef struct {
 	int socket;
@@ -21,7 +18,6 @@ typedef struct {
 	char buffer[MAXLINE];
 } Peer;
 
->>>>>>> remake
 class Communication{
     public:
     //int PORT= 5000;
@@ -52,7 +48,6 @@ class Client: public Communication{
     void run()
     {
     int n, len;
-<<<<<<< HEAD
 
     if (connect(sockfd, (struct sockaddr*)&servaddr,
     sizeof(servaddr)) < 0) {
@@ -65,7 +60,7 @@ class Client: public Communication{
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
     //close(sockfd);
-=======
+/*
   fd_set rset;
 for(;;){
           sockfd = socket(AF_INET, SOCK_STREAM, 0);
@@ -99,8 +94,7 @@ printf("Message from server: ");
  
  }
  }
-
->>>>>>> remake
+*/
     }
     
 
@@ -110,7 +104,6 @@ printf("Message from server: ");
 
 
 
-<<<<<<< HEAD
 /* BufferLength is 100 bytes */
 #define BufferLength 100
 /* Server port number */
@@ -325,7 +318,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	/*exit(0);*/
 	/*return 0;*/
 	}
-=======
+/*
     }
  void run()
   {
@@ -343,7 +336,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
    bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
    listen(sockfd, 10);
 
-   /* create UDP socket */
+   // create UDP socket 
    //udpfd = socket(AF_INET, SOCK_DGRAM, 0);
    // binding server addr structure to udp sockfd
    //bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
@@ -401,7 +394,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
  	  
    }
  }
->>>>>>> remake
+*/
 };
 
 
@@ -418,40 +411,7 @@ int main(){
 Communication *comm;
 
  int sockfd;
-<<<<<<< HEAD
-   char buffer[MAXLINE];
-     char* message = "Hello Server";
-       struct sockaddr_in servaddr;
 
-         int n, len;
-	   // Creating socket file descriptor
-	      if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-	        printf("socket creation failed");
-	          exit(0);
-	            }
-	              memset(&servaddr, 0, sizeof(servaddr));
-	                // Filling server information
-	                  servaddr.sin_family = AF_INET;
-	                    servaddr.sin_port = htons(PORT);
-	                      servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-if(connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr))<0)
-
-
-
-
-
-	                            comm=new Server();
-	                            else comm=new Client();
-	                              close (sockfd);
-	                                  comm->run();
-	   
-
-//  Server server;
-//  server.run();
-//  Client client;
-//  client.run();
-
-=======
   char buffer[MAXLINE];
   char* message = "Hello Server";
   struct sockaddr_in servaddr;
@@ -473,7 +433,6 @@ if(connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr))<0)
   }else {comm=new Client();}
 close (sockfd);
     comm->run();
->>>>>>> remake
 
 
 
