@@ -114,17 +114,17 @@ class Server : public Communication{
     int sd, sd2, rc, length = sizeof(int);
     int totalcnt = 0, on = 1;
     char temp;
-      char buffer[BufferLength];
-       struct sockaddr_in serveraddr;
-      struct sockaddr_in their_addr;
+      //char buffer[BufferLength];
+      // struct sockaddr_in serveraddr;
+      //struct sockaddr_in their_addr;
       fd_set read_fd;
-      struct timeval timeout;
+      //struct timeval timeout;
        /*timeout.tv_sec = 15;*/
        /*timeout.tv_usec = 0;*/	
 	Server()
 	{
-	 timeout.tv_sec = 15;
-         timeout.tv_usec = 0;    
+	// timeout.tv_sec = 15;
+        // timeout.tv_usec = 0;    
 	/* The socket() function returns a socket descriptor */
 	/* representing an endpoint. The statement also */
 	/* identifies that the INET (Internet Protocol) */
@@ -132,7 +132,7 @@ class Server : public Communication{
 	/* will be used for this socket. */
  	/************************************************/
  	/* Get a socket descriptor */
-	if((sd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	{
 	perror("Server-socket() error");
 	/* Just exit */
@@ -146,26 +146,26 @@ class Server : public Communication{
 	/* expires. */
 	/***********************************************/
 	/* Allow socket descriptor to be reusable */
-	if((rc = setsockopt(sd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
+	if((rc = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
 	{
 	perror("Server-setsockopt() error");
-	close(sd);
+	close(sockfd);
 	exit (-1);
 	}
 	else
 	printf("Server-setsockopt() is OK\n");
 	/* bind to an address */
-	memset(&serveraddr, 0, sizeof(struct sockaddr_in));
-	serveraddr.sin_family = AF_INET;
-	serveraddr.sin_port = htons(SERVPORT);
-	serveraddr.sin_addr.s_addr = htonl(INADDR_ANY);
+	memset(&servaddr, 0, sizeof(struct sockaddr_in));
+	servaddr.sin_family = AF_INET;
+	servaddr.sin_port = htons(SERVPORT);
+	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	/*printf("Using %s, listening at %d\n", inet_ntoa(serveraddr.sin_addr), SERVPORT);*/
 	/* After the socket descriptor is created, a bind() */
 	/* function gets a unique name for the socket. */
 	/* In this example, the user sets the */
 	/* s_addr to zero, which allows the system to */
 	/* connect to any client that used port 3005. */
-	if((rc = bind(sd, (struct sockaddr *)&serveraddr, sizeof(serveraddr))) < 0)
+	if((rc = bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) < 0)
 	{
 	perror("Server-bind() error");
 	/* Close the socket descriptor */
@@ -181,10 +181,10 @@ class Server : public Communication{
 	/* the system starts rejecting incoming requests.*/
 	/*************************************************/
 	/* Up to 10 clients can be queued */
-	if((rc = listen(sd, 10)) < 0)
+	if((rc = listen(sockfd, 10)) < 0)
 	{
         perror("Server-listen() error");
-        close(sd);
+        close(sockfd);
         exit (-1);
     	}
 	else
@@ -203,11 +203,11 @@ class Server : public Communication{
 	int sin_size = sizeof(struct sockaddr_in);
 
 
-sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size);    	
-if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
+sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
+if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	{
 	perror("Server-accept() error");
-	close(sd);
+	close(sockfd);
 	exit (-1);
 	}
 	else
@@ -244,14 +244,14 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	if(rc < 0)
 	{
 	perror("Server-read() error");
-	close(sd);
+	close(sockfd);
 	close(sd2);
 	exit (-1);
 	}
 	else if (rc == 0)
 	{
 	printf("Client program has issued a close()\n");
-	close(sd);
+	close(sockfd);
 	close(sd2);
 	exit(-1);
 	}
@@ -265,7 +265,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	else if (rc < 0)
 	{
 	perror("Server-select() error");
-	close(sd);
+	close(sockfd);
 	close(sd2);
 	exit(-1);
 	}
@@ -273,7 +273,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	else
 	{
 	printf("Server-select() timed out.\n");
-	close(sd);
+	close(sockfd);
 	close(sd2);
 	exit(-1);
 	}
@@ -301,7 +301,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	}
 	else
 	printf("Server-write() is OK\n");
-	close(sd);
+	close(sockfd);
 	close(sd2);
 	exit(-1);
 	}
@@ -314,7 +314,7 @@ if((sd2 = accept(sd, (struct sockaddr *)&their_addr, &sin_size)) < 0)
 	/* close the server listening socket. */
 	/******************************************/
 	close(sd2);
-	close(sd);
+	close(sockfd);
 	/*exit(0);*/
 	/*return 0;*/
 	}
