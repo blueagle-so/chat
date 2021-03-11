@@ -23,6 +23,7 @@ class Communication{
     //int PORT= 5000;
     //    //int MAXLINE= 1024;
     Peer peer;    
+    fd_set read_fd, write_fd;
     char* message;
     int sockfd;
     struct sockaddr_in servaddr,cliaddr;
@@ -117,7 +118,7 @@ class Server : public Communication{
       //char buffer[BufferLength];
       // struct sockaddr_in serveraddr;
       //struct sockaddr_in their_addr;
-      fd_set read_fd;
+      //fd_set read_fd;
       //struct timeval timeout;
        /*timeout.tv_sec = 15;*/
        /*timeout.tv_usec = 0;*/	
@@ -226,8 +227,9 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	/* select() for data to be read. */
 	FD_ZERO(&read_fd);
 	FD_SET(sd2, &read_fd);
-	rc = select(sd2+1, NULL, &read_fd, NULL, NULL);
-	if((rc == 1) && (FD_ISSET(sd2, &read_fd)))
+	FD_SET(sd2, &write_fd);
+	rc = select(sd2+1, &read_fd, &write_fd, NULL, NULL);
+	if((rc == 1) && (FD_ISSET(sd2, &write_fd)))
 	{
 	/* Read data from the client. */
 	totalcnt = 0;
