@@ -20,6 +20,18 @@ typedef struct {
 
 class Communication{
     public:
+    Communication(){
+    message = "Hello Server";
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    memset(&servaddr, 0, sizeof(servaddr));
+
+    // Filling server information
+    servaddr.sin_family = AF_INET;
+    servaddr.sin_port = htons(PORT);
+
+
+
+    }
     //int PORT= 5000;
     //    //int MAXLINE= 1024;
     Peer peer;    
@@ -36,13 +48,13 @@ class Communication{
 class Client: public Communication{
     public:
     Client(){
-    message = "Hello Server";
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&servaddr, 0, sizeof(servaddr));
+    //message = "Hello Server";
+    //sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    //memset(&servaddr, 0, sizeof(servaddr));
 
         // Filling server information
-        servaddr.sin_family = AF_INET;
-        servaddr.sin_port = htons(PORT);
+        //servaddr.sin_family = AF_INET;
+        //servaddr.sin_port = htons(PORT);
         servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     }
@@ -133,13 +145,13 @@ class Server : public Communication{
 	/* will be used for this socket. */
  	/************************************************/
  	/* Get a socket descriptor */
-	if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
-	{
-	perror("Server-socket() error");
+	//if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
+	//{
+	//perror("Server-socket() error");
 	/* Just exit */
-	exit (-1);
-	}
-	else
+	//exit (-1);
+	//}
+	//else
 	printf("Server-socket() is OK\n");
 	/* The setsockopt() function is used to allow */
 	/* the local address to be reused when the server */
