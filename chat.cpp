@@ -21,7 +21,7 @@ typedef struct {
 class Communication{
     public:
     Communication(){
-    message = "Hello Server";
+    //message = "Hello Server";
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&servaddr, 0, sizeof(servaddr));
 
@@ -32,7 +32,7 @@ class Communication{
     Peer peer;    
     fd_set read_fd, write_fd;
     char* message;
-    int sockfd;
+    int sockfd, sd2;
     struct sockaddr_in servaddr,cliaddr;
     virtual void run(){}
     char buffer[MAXLINE];
@@ -49,11 +49,28 @@ class Client: public Communication{
     {
     //int n, len;
 
-    if (connect(sockfd, (struct sockaddr*)&servaddr,
-    sizeof(servaddr)) < 0) {
-    printf("\n Error : Connect Failed \n");
-    }
-    memset(buffer, 0, sizeof(buffer));
+    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+	for(;;){
+	FD_ZERO(&read_fd);
+        FD_ZERO(&write_fd);
+        FD_SET(0, &read_fd);
+        FD_SET(sockfd, &read_fd);
+        FD_SET(sockfd, &write_fd);
+        select(10, &read_fd, &write_fd, NULL, NULL);
+	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));}
+        //write(sockfd, buffer, sizeof(buffer)); 
+        //puts("test");
+        //if(FD_ISSET(sockfd, &read_fd))read(sockfd, buffer, sizeof(buffer));
+        //printf("Received data from the f***ing client: %s\n", buffer);
+        //printf("Server-Echoing back to client...\n");}
+        //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 
+	}
+        close(sockfd);
+
+
+
+
+    /*memset(buffer, 0, sizeof(buffer));
     strcpy(buffer, "Hello Server");
     //write(0,"input message: ",15);
     //read(0,buffer,sizeof(buffer));
@@ -61,7 +78,7 @@ class Client: public Communication{
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
-    //close(sockfd);
+    //close(sockfd);8?
 /*
   fd_set rset;
 for(;;){
@@ -113,8 +130,8 @@ printf("Message from server: ");
 class Server : public Communication{
 		public:
     /* Variable and structure definitions. */
-    int sd, sd2, rc, length = sizeof(int);
-    int totalcnt = 0, on = 1;
+    //int sd, sd2, rc, length = sizeof(int);
+    //int totalcnt = 0, on = 1;
 	Server()
 	{
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -133,13 +150,16 @@ class Server : public Communication{
 	FD_SET(sd2, &read_fd);
 	FD_SET(sd2, &write_fd);
 	select(sd2+1, &read_fd, &write_fd, NULL, NULL);
-	if(FD_ISSET(sd2, &write_fd))
-	read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
-	printf("Received data from the f***ing client: %s\n", buffer);
-	printf("Server-Echoing back to client...\n");
+	if(FD_ISSET(sd2, &read_fd)){
+	read(sd2, buffer, sizeof(buffer));
+	puts(buffer);
+	//printf("Received data from the f***ing client: %s\n", buffer);
+	//printf("Server-Echoing back to client...\n");
+	}
 	if (FD_ISSET(sd2, &write_fd)){
         write(sd2, buffer, sizeof(buffer)); 
-	break;}
+	//break;
+	}
 	}
 	close(sd2);
 	close(sockfd);
@@ -241,7 +261,7 @@ Communication *comm;
  int sockfd;
 
   char buffer[MAXLINE];
-  char* message = "Hello Server";
+  //char* message = "Hello Server";
   struct sockaddr_in servaddr;
 
   int n, len;
