@@ -122,17 +122,14 @@ class Server : public Communication{
 	listen(sockfd, 10);
 	}
 	void run(){
-
-	/* accept() the incoming connection request. */
-	int sin_size = sizeof(struct sockaddr_in);
-
-
+//int sin_size = sizeof(struct sockaddr_in);
 //sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
 	sd2 = accept(sockfd, NULL, NULL);
 	sd2 = accept(sockfd, NULL, NULL);           
+	for(;;){
 	FD_ZERO(&read_fd);
         FD_ZERO(&write_fd);
-	//FD_SET(0, &read_fd);
+	FD_SET(0, &read_fd);
 	FD_SET(sd2, &read_fd);
 	FD_SET(sd2, &write_fd);
 	select(sd2+1, &read_fd, &write_fd, NULL, NULL);
@@ -140,7 +137,10 @@ class Server : public Communication{
 	read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
 	printf("Received data from the f***ing client: %s\n", buffer);
 	printf("Server-Echoing back to client...\n");
-	write(sd2, buffer, totalcnt);
+	if (FD_ISSET(sd2, &write_fd)){
+        write(sd2, buffer, sizeof(buffer)); 
+	break;}
+	}
 	close(sd2);
 	close(sockfd);
 	/*exit(0);*/
