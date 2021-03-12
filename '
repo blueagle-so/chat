@@ -152,8 +152,9 @@ class Server : public Communication{
 	select(sd2+1, &read_fd, &write_fd, NULL, NULL);
 	if(FD_ISSET(sd2, &read_fd)){
 	read(sd2, buffer, sizeof(buffer));
+	//puts(buffer);
 	printf("Received data from the f***ing client: %s\n", buffer);
-	//printf("Server-Echoing back to client...\n");
+	printf("Server-Echoing back to client...\n");
 	}
 	if (FD_ISSET(sd2, &write_fd)){
         write(sd2, buffer, sizeof(buffer)); 
