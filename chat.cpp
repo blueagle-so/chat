@@ -47,10 +47,9 @@ class Client: public Communication{
     }
     void run()
     {
-    //int n, len;
-
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 	for(;;){
+	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
         FD_ZERO(&write_fd);
         FD_SET(0, &read_fd);
@@ -62,60 +61,13 @@ class Client: public Communication{
         //puts("test");
         if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
 	puts("reciving data from server: ");
-	write(0, buffer, sizeof(buffer));
+	write(0, (const char *)buffer, sizeof(buffer));
 	}
         //printf("Server-Echoing back to client...\n");}
         //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 
 	}
         close(sockfd);
 
-
-
-
-    /*memset(buffer, 0, sizeof(buffer));
-    strcpy(buffer, "Hello Server");
-    //write(0,"input message: ",15);
-    //read(0,buffer,sizeof(buffer));
-    write(sockfd, buffer, sizeof(buffer));
-    printf("Message from server: ");
-    read(sockfd, buffer, sizeof(buffer));
-    puts(buffer);
-    //close(sockfd);8?
-/*
-  fd_set rset;
-for(;;){
-          sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    connect(sockfd, (struct sockaddr*)&servaddr,sizeof(servaddr)); //{
-	FD_ZERO(&rset);	
-     FD_SET(0, &rset);
-     FD_SET(sockfd, &rset); 
-       select(10, &rset, NULL, NULL, NULL);
- if (FD_ISSET(0, &rset)){
-    //   connect(sockfd, (struct sockaddr*)&servaddr,sizeof(servaddr)); //{
-
-	    read(0,buffer,sizeof(buffer));
-       //printf("\n Error : Connect Failed \n");
-    //}
-    //memset(buffer, 0, sizeof(buffer));
-    //strcpy(buffer, "Hello Server");
-    write(sockfd, buffer, sizeof(buffer));
-    //printf("Message from server: ");
-    //read(sockfd, buffer, sizeof(buffer));
-    //puts(buffer);
- //   close(sockfd);
-    
- }
-   //        sockfd = socket(AF_INET, SOCK_STREAM, 0);   
- //FD_SET(0, &rset);
-   /// select(10, &rset, NULL, NULL, NULL);
- if (FD_ISSET(sockfd, &rset)){
-     read(sockfd, buffer, sizeof(buffer)); 
-printf("Message from server: ");
-     puts(buffer);
- 
- }
- }
-*/
     }
     
 
@@ -146,6 +98,7 @@ class Server : public Communication{
 	sd2 = accept(sockfd, NULL, NULL);
 	sd2 = accept(sockfd, NULL, NULL);           
 	for(;;){
+	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
         FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
@@ -163,7 +116,7 @@ class Server : public Communication{
 	//}
 	if(FD_ISSET(0, &read_fd)){
         read(0, buffer, sizeof(buffer));
-        write(sd2, buffer, sizeof(buffer)); 
+        write(sd2, (const char *)buffer, sizeof(buffer)); 
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
         }
@@ -173,83 +126,6 @@ class Server : public Communication{
 	/*exit(0);*/
 	/*return 0;*/
 	}
-/*
-    }
- void run()
-  {
-  int listenfd, connfd, udpfd, nready, maxfdp1;
-  char buffer[MAXLINE];
-  pid_t childpid;
-  fd_set rset;
-  ssize_t n;
-  socklen_t len;
-  const int on = 1;
-  void sig_chld(int);
-//for(;;){
-  //   sockfd = socket(AF_INET, SOCK_STREAM, 0);
-	// binding server addr structure to listenfd
-   bind(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-   listen(sockfd, 10);
-
-   // create UDP socket 
-   //udpfd = socket(AF_INET, SOCK_DGRAM, 0);
-   // binding server addr structure to udp sockfd
-   //bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
-
-   for(;;){
-  // clear the descriptor set
-  FD_ZERO(&rset);
-
-  // get maxfd
-  maxfdp1 = max(sockfd, udpfd) + 1;
-  //for (;;) {
-
-  // set listenfd and udpfd in readset
-  FD_SET(sockfd, &rset);
-  FD_SET(0, &rset);
-
-   // select the ready descriptor
-   nready = select(maxfdp1, &rset, NULL, NULL, NULL);
-
-   // if tcp socket is readable then handle
-   // it by accepting the connection
-   if (FD_ISSET(sockfd, &rset)) {
-   len = sizeof(cliaddr);
-   connfd = accept(sockfd, NULL, NULL);
-   if ((childpid = fork()) == 0) {
-   //close(sockfd);
-   bzero(buffer, sizeof(buffer));
-   printf("Message From TCP client: ");
-   read(connfd, buffer, sizeof(buffer));
-   puts(buffer);
-   write(connfd, buffer, sizeof(buffer));
-   close(connfd);
-   exit(0);
-   }
-   close(connfd);
-   }
-   // if udp socket is readable receive the message.
-   if (FD_ISSET(0, &rset)) {
-   connfd = accept(sockfd, NULL, NULL);
-     if ((childpid = fork()) == 0) {
-	   //    close(sockfd);
-	         bzero(buffer, sizeof(buffer));
-		   //printf("Message From TCP client: ");
-		     read(0, buffer, sizeof(buffer));
-		       puts(buffer);
-		         write(connfd, (const char*)buffer, sizeof(buffer));
-			   close(connfd);
-			     exit(0);
-			       }
-       close(connfd);
-         } 
-   
-
-
- 	  
-   }
- }
-*/
 };
 
 
