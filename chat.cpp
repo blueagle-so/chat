@@ -54,7 +54,9 @@ class Client: public Communication{
     printf("\n Error : Connect Failed \n");
     }
     memset(buffer, 0, sizeof(buffer));
-    strcpy(buffer, "Hello Server");
+    //strcpy(buffer, "Hello Server");
+    write(0,"input message: ",15);
+    read(0,buffer,sizeof(buffer));
     write(sockfd, buffer, sizeof(buffer));
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
