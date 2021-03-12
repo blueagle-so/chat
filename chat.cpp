@@ -32,8 +32,6 @@ class Communication{
 
 
     }
-    //int PORT= 5000;
-    //    //int MAXLINE= 1024;
     Peer peer;    
     fd_set read_fd, write_fd;
     char* message;
@@ -48,13 +46,6 @@ class Communication{
 class Client: public Communication{
     public:
     Client(){
-    //message = "Hello Server";
-    //sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    //memset(&servaddr, 0, sizeof(servaddr));
-
-        // Filling server information
-        //servaddr.sin_family = AF_INET;
-        //servaddr.sin_port = htons(PORT);
         servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     }
@@ -67,8 +58,8 @@ class Client: public Communication{
     printf("\n Error : Connect Failed \n");
     }
     memset(buffer, 0, sizeof(buffer));
-    //strcpy(buffer, "Hello Server");
-    //write(sockfd, buffer, sizeof(buffer));
+    strcpy(buffer, "Hello Server");
+    write(sockfd, buffer, sizeof(buffer));
     printf("Message from server: ");
     read(sockfd, buffer, sizeof(buffer));
     puts(buffer);
@@ -138,12 +129,6 @@ class Server : public Communication{
 	{
 	// timeout.tv_sec = 15;
         // timeout.tv_usec = 0;    
-	/* The socket() function returns a socket descriptor */
-	/* representing an endpoint. The statement also */
-	/* identifies that the INET (Internet Protocol) */
- 	/* address family with the TCP transport (SOCK_STREAM) */
-	/* will be used for this socket. */
- 	/************************************************/
  	/* Get a socket descriptor */
 	//if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0)
 	//{
@@ -153,11 +138,6 @@ class Server : public Communication{
 	//}
 	//else
 	printf("Server-socket() is OK\n");
-	/* The setsockopt() function is used to allow */
-	/* the local address to be reused when the server */
-	/* is restarted before the required wait time */
-	/* expires. */
-	/***********************************************/
 	/* Allow socket descriptor to be reusable */
 	if((rc = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
 	{
@@ -168,16 +148,8 @@ class Server : public Communication{
 	else
 	printf("Server-setsockopt() is OK\n");
 	/* bind to an address */
-	memset(&servaddr, 0, sizeof(struct sockaddr_in));
-	servaddr.sin_family = AF_INET;
-	servaddr.sin_port = htons(SERVPORT);
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	/*printf("Using %s, listening at %d\n", inet_ntoa(serveraddr.sin_addr), SERVPORT);*/
-	/* After the socket descriptor is created, a bind() */
-	/* function gets a unique name for the socket. */
-	/* In this example, the user sets the */
-	/* s_addr to zero, which allows the system to */
-	/* connect to any client that used port 3005. */
 	if((rc = bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr))) < 0)
 	{
 	perror("Server-bind() error");
@@ -187,12 +159,6 @@ class Server : public Communication{
 	}
 	else
 	printf("Server-bind() is OK\n");
-	/* The listen() function allows the server to accept */
-	/* incoming client connections. In this example, */
-	/* the backlog is set to 10. This means that the */
-	/* system can queue up to 10 connection requests before */
-	/* the system starts rejecting incoming requests.*/
-	/*************************************************/
 	/* Up to 10 clients can be queued */
 	if((rc = listen(sockfd, 10)) < 0)
 	{
@@ -205,13 +171,6 @@ class Server : public Communication{
 	}
 	void run(){
 
-	/* The server will accept a connection request */
-	/* with this accept() function, provided the */
-	/* connection request does the following: */
-	/* - Is part of the same address family */
-	/* - Uses streams sockets (TCP) */
-	/* - Attempts to connect to the specified port */
-	/***********************************************/
 	/* accept() the incoming connection request. */
 	int sin_size = sizeof(struct sockaddr_in);
 
@@ -229,15 +188,11 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	printf("Server-new socket, sd2 is OK...\n");
 	/*printf("Got connection from the f***ing client: %s\n", inet_ntoa(their_addr.sin_addr));*/
 									
-	/* The select() function allows the process to */
-	/* wait for an event to occur and to wake up */
-	/* the process when the event occurs. In this */
-	/* example, the system notifies the process */
-	/* only when data is available to read. */
-	/***********************************************/
 	/* Wait for up to 15 seconds on */
 	/* select() for data to be read. */
 	FD_ZERO(&read_fd);
+        FD_ZERO(&write_fd);
+	//FD_SET(0, &read_fd);
 	FD_SET(sd2, &read_fd);
 	FD_SET(sd2, &write_fd);
 	rc = select(sd2+1, &read_fd, &write_fd, NULL, NULL);
@@ -247,14 +202,9 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	totalcnt = 0;
 	while(totalcnt < BufferLength)
 	{
-	/* When select() indicates that there is data */
-	/* available, use the read() function to read */
-	/* 100 bytes of the string that the */
-	/* client sent. */
-	/***********************************************/
 	/* read() from client */
-	//rc = read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
-	rc = write(sd2,"hello world",15);
+	rc = read(sd2, &buffer[totalcnt], (BufferLength - totalcnt));
+	//rc = write(sd2,"hello world",15);
 	if(rc < 0)
 	{
 	perror("Server-read() error");
@@ -272,7 +222,7 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	else
 	{
 	totalcnt += rc;
-	printf("Server-write() is  OK\n");
+	printf("Server-read() is  OK\n");
 	}
 	}
 	}
@@ -293,10 +243,6 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	}
 	/* Shows the data */
 	printf("Received data from the f***ing client: %s\n", buffer);
-	/* Echo some bytes of string, back */
-	/* to the client by using the write() */
-	/* function. */
-	/************************************/
 	/* write() some bytes of string, */
 	/* back to the client. */
 	printf("Server-Echoing back to client...\n");
@@ -319,14 +265,8 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	close(sd2);
 	exit(-1);
 	}
-	/* When the data has been sent, close() */
-	/* the socket descriptor that was returned */
-	/* from the accept() verb and close() the */
-	/* original socket descriptor. */
-	/*****************************************/
 	/* Close the connection to the client and */
 	/* close the server listening socket. */
-	/******************************************/
 	close(sd2);
 	close(sockfd);
 	/*exit(0);*/
