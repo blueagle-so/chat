@@ -117,7 +117,7 @@ class Server : public Communication{
     /* Variable and structure definitions. */
     int sd, sd2, rc, length = sizeof(int);
     int totalcnt = 0, on = 1;
-    char temp;
+    //char temp;
       //char buffer[BufferLength];
       // struct sockaddr_in serveraddr;
       //struct sockaddr_in their_addr;
@@ -139,14 +139,14 @@ class Server : public Communication{
 	//else
 	printf("Server-socket() is OK\n");
 	/* Allow socket descriptor to be reusable */
-	if((rc = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
-	{
-	perror("Server-setsockopt() error");
-	close(sockfd);
-	exit (-1);
-	}
-	else
-	printf("Server-setsockopt() is OK\n");
+	//if((rc = setsockopt(sockfd, SOL_SOCKET, SO_REUSEADDR, (char *)&on, sizeof(on))) < 0)
+	//{
+	//perror("Server-setsockopt() error");
+	//close(sockfd);
+	//exit (-1);
+	//}
+	//else
+	//printf("Server-setsockopt() is OK\n");
 	/* bind to an address */
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	/*printf("Using %s, listening at %d\n", inet_ntoa(serveraddr.sin_addr), SERVPORT);*/
@@ -251,12 +251,12 @@ if((sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size)) < 0)
 	{
 	perror("Server-write() error");
 	/* Get the error number. */
-	rc = getsockopt(sd2, SOL_SOCKET, SO_ERROR, &temp, &length);
+	//rc = getsockopt(sd2, SOL_SOCKET, SO_ERROR, &temp, &length);
 	if(rc == 0)
 	{
 	/* Print out the asynchronously */
 	/* received error. */
-	errno = temp;
+	//errno = temp;
 	perror("SO_ERROR was: ");
 	}
 	else
