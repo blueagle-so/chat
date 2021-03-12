@@ -60,8 +60,9 @@ class Client: public Communication{
         //write(sockfd, buffer, sizeof(buffer)); 
         //puts("test");
         if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
-	puts("reciving data from server: ");
-	write(0, (const char *)buffer, sizeof(buffer));
+	//puts("reciving data from server: ");
+	//write(0, (const char *)buffer, sizeof(buffer));
+	printf("reciving data from server: %s\n",buffer);
 	}
         //printf("Server-Echoing back to client...\n");}
         //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 
