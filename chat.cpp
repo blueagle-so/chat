@@ -55,13 +55,15 @@ class Client: public Communication{
         FD_ZERO(&write_fd);
         FD_SET(0, &read_fd);
         FD_SET(sockfd, &read_fd);
-        FD_SET(sockfd, &write_fd);
+        //FD_SET(sockfd, &write_fd);
         select(10, &read_fd, &write_fd, NULL, NULL);
 	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));}
         //write(sockfd, buffer, sizeof(buffer)); 
         //puts("test");
-        //if(FD_ISSET(sockfd, &read_fd))read(sockfd, buffer, sizeof(buffer));
-        //printf("Received data from the f***ing client: %s\n", buffer);
+        if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
+	puts("reciving data from server: ");
+	write(0, buffer, sizeof(buffer));
+	}
         //printf("Server-Echoing back to client...\n");}
         //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 
 	}
@@ -148,17 +150,23 @@ class Server : public Communication{
         FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
 	FD_SET(sd2, &read_fd);
-	FD_SET(sd2, &write_fd);
+	//FD_SET(sd2, &write_fd);
 	select(sd2+1, &read_fd, &write_fd, NULL, NULL);
 	if(FD_ISSET(sd2, &read_fd)){
 	read(sd2, buffer, sizeof(buffer));
 	printf("Received data from the f***ing client: %s\n", buffer);
 	//printf("Server-Echoing back to client...\n");
 	}
-	if (FD_ISSET(sd2, &write_fd)){
-        write(sd2, buffer, sizeof(buffer)); 
+	//if (FD_ISSET(sd2, &write_fd)){
+        //write(sd2, buffer, sizeof(buffer)); 
 	//break;
-	}
+	//}
+	if(FD_ISSET(0, &read_fd)){
+        read(0, buffer, sizeof(buffer));
+        write(sd2, buffer, sizeof(buffer)); 
+	//printf("Received data from the f***ing client: %s\n", buffer);
+        //printf("Server-Echoing back to client...\n");
+        }
 	}
 	close(sd2);
 	close(sockfd);
