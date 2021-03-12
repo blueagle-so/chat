@@ -29,8 +29,6 @@ class Communication{
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
 
-
-
     }
     Peer peer;    
     fd_set read_fd, write_fd;
