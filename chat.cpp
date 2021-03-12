@@ -44,7 +44,6 @@ class Client: public Communication{
     public:
     Client(){
         servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-
     }
     void run()
     {
