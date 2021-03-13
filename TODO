@@ -1,1 +1,2 @@
-make stdin select()
+V make stdin select()
+  make multi client chat

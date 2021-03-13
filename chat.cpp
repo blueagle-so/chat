@@ -97,8 +97,9 @@ class Server : public Communication{
 //int sin_size = sizeof(struct sockaddr_in);
 //sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
 	sd2 = accept(sockfd, NULL, NULL);
-	sd2 = accept(sockfd, NULL, NULL);           
+	//sd2 = accept(sockfd, NULL, NULL);           
 	for(;;){
+        sd2 = accept(sockfd, NULL, NULL);           
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
         FD_ZERO(&write_fd);
