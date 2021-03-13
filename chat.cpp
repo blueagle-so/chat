@@ -90,7 +90,7 @@ class Client: public Communication{
 class Server : public Communication{
 		public:
     /* Variable and structure definitions. */
-    //int sd, sd2, rc, length = sizeof(int);
+    int sd, i, rc,  max_clients = 30, client_socket[30];
     //int totalcnt = 0, on = 1;
 int new_socket;
 	Server()
@@ -98,17 +98,30 @@ int new_socket;
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 	listen(sockfd, 10);
-	}
+ for (i = 0; i < max_clients; i++) 
+        { 
+                client_socket[i] = 0; 
+        } 	
+
+
+}
 	void run(){
 //int sin_size = sizeof(struct sockaddr_in);
 //sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
 	sd2 = accept(sockfd, NULL, NULL);
 	sd2 = accept(sockfd, NULL, NULL);           
 	for(;;){
-        //sd2 = accept(sockfd, NULL, NULL);           
-	memset(buffer, 0, sizeof(buffer));
-	FD_ZERO(&read_fd);
-        FD_ZERO(&write_fd);
+	FD_ZERO(&read_fd);	
+	for ( i = 0 ; i < max_clients ; i++) 
+        { 
+        //socket descriptor 
+        sd = client_socket[i]; 
+        //if valid socket descriptor then add to read list 
+        if(sd > 0) 
+        FD_SET( sd , &read_fd); 
+	}
+	//FD_ZERO(&read_fd);
+        //FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
 	FD_SET(sd2, &read_fd);
 	FD_SET(sockfd, &read_fd);	
@@ -130,7 +143,33 @@ int new_socket;
         //printf("Server-Echoing back to client...\n");
         }
 	if (FD_ISSET(sockfd, &read_fd)){//read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));
-if ((new_socket = accept(sockfd,(struct sockaddr *)&servaddr, (socklen_t*)&servaddr))>0) write(new_socket, "connection accepted", 20);	
+new_socket = accept(sockfd,NULL, NULL);write(new_socket, "connection accepted\n", 20);	
+for (i = 0; i < max_clients; i++) 
+{ 
+//if position is empty 
+if( client_socket[i] == 0 ) 
+{ 
+client_socket[i] = new_socket; 
+write(new_socket, new_socket +"\n", 20);                                        
+break; 
+} 
+} 
+}
+
+for (i = 0; i < max_clients; i++) 
+{ 
+sd = client_socket[i]; 
+                               
+if (FD_ISSET( sd , &read_fd)) 
+ {
+//Check if it was for closing , and also read the 
+//incoming message 
+int v=read( sd , buffer, 1024); 
+ buffer[v] = '\0'; 
+send(sd , buffer , strlen(buffer) , 0 );
+}
+
+
 
 
 //printf("Received data from the econd client: %s\n", buffer);
