@@ -22,7 +22,10 @@ int main(int argc , char *argv[])
 		max_clients = 30 , activity, i , valread , sd; 
 	int max_sd; 
 	struct sockaddr_in address; 
-		
+	
+	char *p;
+	scanf("test: ",&p);	
+	
 	char buffer[1025]; //data buffer of 1K 
 		
 	//set of socket descriptors 

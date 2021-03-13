@@ -66,7 +66,12 @@ class Client: public Communication{
 	printf("reciving data from server: %s\n",buffer);
 	}
         //printf("Server-Echoing back to client...\n");}
-        //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 
+        //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 	
+	//char *p;
+        //int n;
+
+        //errno = 0;
+        ///scanf("%m[a-z]", &buffer);
 	}
         close(sockfd);
 
@@ -88,6 +93,7 @@ class Server : public Communication{
     /* Variable and structure definitions. */
     //int sd, sd2, rc, length = sizeof(int);
     //int totalcnt = 0, on = 1;
+int new_socket;
 	Server()
 	{
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
@@ -98,14 +104,15 @@ class Server : public Communication{
 //int sin_size = sizeof(struct sockaddr_in);
 //sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
 	sd2 = accept(sockfd, NULL, NULL);
-	//sd2 = accept(sockfd, NULL, NULL);           
+	sd2 = accept(sockfd, NULL, NULL);           
 	for(;;){
-        sd2 = accept(sockfd, NULL, NULL);           
+        //sd2 = accept(sockfd, NULL, NULL);           
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
         FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
 	FD_SET(sd2, &read_fd);
+	FD_SET(sockfd, &read_fd);	
 	//FD_SET(sd2, &write_fd);
 	select(sd2+1, &read_fd, &write_fd, NULL, NULL);
 	if(FD_ISSET(sd2, &read_fd)){
@@ -123,6 +130,12 @@ class Server : public Communication{
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
         }
+	if (FD_ISSET(sockfd, &read_fd)){//read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));
+if ((new_socket = accept(sockfd,(struct sockaddr *)&servaddr, (socklen_t*)&servaddr))>0) write(new_socket, "connection accepted", 20);	
+
+
+//printf("Received data from the econd client: %s\n", buffer);
+	}
 	}
 	close(sd2);
 	close(sockfd);
