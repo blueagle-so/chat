@@ -18,7 +18,6 @@ typedef struct {
 	char buffer[MAXLINE];
 } Peer;
 
-
 class Communication{
     public:
     Communication(){
