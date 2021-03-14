@@ -23,8 +23,6 @@ int main(int argc , char *argv[])
 	int max_sd; 
 	struct sockaddr_in address; 
 	
-	char *p;
-	scanf("test: ",&p);	
 	
 	char buffer[1025]; //data buffer of 1K 
 		
@@ -49,12 +47,12 @@ int main(int argc , char *argv[])
 	
 	//set master socket to allow multiple connections , 
 	//this is just a good habit, it will work without this 
-	if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, 
-		sizeof(opt)) < 0 ) 
-	{ 
-		perror("setsockopt"); 
-		exit(EXIT_FAILURE); 
-	} 
+	//if( setsockopt(master_socket, SOL_SOCKET, SO_REUSEADDR, (char *)&opt, 
+	//	sizeof(opt)) < 0 ) 
+	//{ 
+	//	perror("setsockopt"); 
+	//	exit(EXIT_FAILURE); 
+	//} 
 	
 	//type of socket created 
 	address.sin_family = AF_INET; 
