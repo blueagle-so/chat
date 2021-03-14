@@ -1,4 +1,4 @@
- #include <arpa/inet.h>
+#include <arpa/inet.h>
  #include <errno.h>
  #include <netinet/in.h>
  #include <signal.h>
@@ -39,6 +39,7 @@ class Communication{
 
 };
 
+
 class Client: public Communication{
     public:
     Client(){
@@ -62,7 +63,7 @@ class Client: public Communication{
 	//puts("reciving data from server: ");
 	//write(0, (const char *)buffer, sizeof(buffer));
 	printf("reciving data from server: %s\n",buffer);
-	}
+	//}
         //printf("Server-Echoing back to client...\n");}
         //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 	
 	//char *p;
@@ -114,15 +115,19 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	addrlen = sizeof(cliaddr); 
 	for(;;){
 	FD_ZERO(&read_fd);	
-        max_sd = sockfd; 
 	for ( i = 0 ; i < max_clients ; i++) 
-        { 
-        //socket descriptor 
-        sd = client_socket[i]; 
-        //if valid socket descriptor then add to read list 
-        if(sd > 0) 
-        FD_SET( sd , &read_fd); 
-	}
+                { 
+                        //socket descriptor 
+                        sd = client_socket[i]; 
+                                
+                        //if valid socket descriptor then add to read list 
+                        if(sd > 0) 
+                                FD_SET( sd , &read_fd); 
+                                
+                        //highest file descriptor number, need it for the select function 
+                        if(sd > max_sd) 
+                                max_sd = sd; 
+                } 	
 	//FD_ZERO(&read_fd);
         //FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
@@ -130,23 +135,23 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	FD_SET(sockfd, &read_fd);	
 	//FD_SET(sd2, &write_fd);
 	select(max_sd+1, &read_fd, &write_fd, NULL, NULL);
-	if(FD_ISSET(sd2, &read_fd)){
-	read(sd2, buffer, sizeof(buffer));
-	printf("Received data from the f***ing client: %s\n", buffer);
+	//if(FD_ISSET(sd2, &read_fd)){
+	//read(sd2, buffer, sizeof(buffer));
+	//printf("Received data from the f***ing client: %s\n", buffer);
 	//printf("Server-Echoing back to client...\n");
-	}
+	//}
 	//if (FD_ISSET(sd2, &write_fd)){
         //write(sd2, buffer, sizeof(buffer)); 
 	//break;
 	//}
-	if(FD_ISSET(0, &read_fd)){
+	if(FD_ISSET(0, &read_fd))//{
         read(0, buffer, sizeof(buffer));
-        write(sd2, (const char *)buffer, sizeof(buffer)); 
+        //write(sd2, (const char *)buffer, sizeof(buffer)); 
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
-        }
+        //}
 
-
+/*
 if (FD_ISSET(sockfd, &read_fd)) 
 		{ 
 			if ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<0) 
@@ -215,7 +220,7 @@ if (FD_ISSET(sockfd, &read_fd))
 
 
 
-
+*/
 
 
 
