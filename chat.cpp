@@ -116,13 +116,19 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	FD_ZERO(&read_fd);	
         max_sd = sockfd; 
 	for ( i = 0 ; i < max_clients ; i++) 
-        { 
-        //socket descriptor 
-        sd = client_socket[i]; 
-        //if valid socket descriptor then add to read list 
-        if(sd > 0) 
-        FD_SET( sd , &read_fd); 
-	}
+		{ 
+			//socket descriptor 
+			sd = client_socket[i]; 
+				
+			//if valid socket descriptor then add to read list 
+			if(sd > 0) 
+				FD_SET( sd , &read_fd); 
+				
+			//highest file descriptor number, need it for the select function 
+			if(sd > max_sd) 
+				max_sd = sd; 
+		} 	
+
 	//FD_ZERO(&read_fd);
         //FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
@@ -156,10 +162,10 @@ if (FD_ISSET(sockfd, &read_fd))
 			} 
 			
 			//inform user of socket number - used in send and receive commands 
-			printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
+printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
 		
 			//send new connection greeting message 
-			if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
+		//if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
 			{ 
 				perror("send"); 
 			} 
