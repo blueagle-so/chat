@@ -167,12 +167,16 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 
 
 if (FD_ISSET(sockfd, &read_fd)) 
-		{ 
-			if ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+		{
+ 	        //sd2=accept(sockfd, NULL, NULL);    
+		//close(sd2);      
+			while ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
-				perror("accept"); 
-				exit(EXIT_FAILURE); 
-			} 
+			close(new_socket);
+			}
+
+
+ 
 			//inform user of socket number - used in send and receive commands 
 printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
 	
@@ -280,11 +284,13 @@ Communication *comm;
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);
   servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  if (connect(sockfd, (struct sockaddr*)&servaddr,
-  sizeof(servaddr)) < 0) {
-  comm=new Server();
-  }else {comm=new Client();}
-close (sockfd);
+  //if (connect(sockfd, (struct sockaddr*)&servaddr,
+ // sizeof(servaddr)) < 0) {
+//close (sockfd);
+ comm=new Server();
+  //}else {close (sockfd);
+//comm=new Client();
+//}
     comm->run();
 
 
