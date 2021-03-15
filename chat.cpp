@@ -136,18 +136,31 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	FD_SET(sockfd, &read_fd);	
 	//FD_SET(sd2, &write_fd);
 	select(max_sd+1, &read_fd, &write_fd, NULL, NULL);
-	if(FD_ISSET(sd2, &read_fd)){
-	read(sd2, buffer, sizeof(buffer));
-	printf("Received data from the f***ing client: %s\n", buffer);
+	//if(FD_ISSET(sd2, &read_fd)){
+	//read(sd2, buffer, sizeof(buffer));
+	//printf("Received data from the f***ing client: %s\n", buffer);
 	//printf("Server-Echoing back to client...\n");
-	}
+	//}
 	//if (FD_ISSET(sd2, &write_fd)){
         //write(sd2, buffer, sizeof(buffer)); 
 	//break;
 	//}
 	if(FD_ISSET(0, &read_fd)){
         read(0, buffer, sizeof(buffer));
-        write(sd2, (const char *)buffer, sizeof(buffer)); 
+        
+	  for ( i = 0 ; i < max_clients ; i++) 
+                { 
+                        //socket descriptor 
+                        sd = client_socket[i]; 
+                                
+                        //if valid socket descriptor then add to read list 
+                      if(sd > 0) 
+	write(sd, (const char *)buffer, sizeof(buffer)); 
+	}	
+
+
+
+
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
         }
@@ -155,12 +168,11 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 
 if (FD_ISSET(sockfd, &read_fd)) 
 		{ 
-			if ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<0) 
+			if ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 				perror("accept"); 
 				exit(EXIT_FAILURE); 
 			} 
-			
 			//inform user of socket number - used in send and receive commands 
 printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
 	
@@ -214,7 +226,7 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 					//set the string terminating NULL byte on the end 
 					//of the data read 
 					buffer[valread] = '\0'; 
-					send(sd , buffer , strlen(buffer) , 0 ); 
+					write(sd , buffer , strlen(buffer) ); 
 				} 
 			} 
 		} 
