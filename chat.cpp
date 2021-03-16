@@ -7,9 +7,9 @@
  #include <sys/socket.h>
  #include <sys/types.h>
  #include <unistd.h>
+ #include <string.h>
  #define PORT 3111 
  #define MAXLINE 1024
- #include <string.h>
 
 typedef struct {
 	int socket;
