@@ -11,6 +11,7 @@
  #define PORT 3111 
  #define MAXLINE 1024
 
+
 typedef struct {
 	int socket;
 	struct sockaddr_in addres;
