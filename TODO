@@ -1,3 +1,4 @@
 V make stdin select()
   make multi client chat
   make echo server to chat
+  fix error client[0]

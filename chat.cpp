@@ -11,7 +11,6 @@
  #define PORT 3111 
  #define MAXLINE 1024
 
-
 typedef struct {
 	int socket;
 	struct sockaddr_in addres;
@@ -206,7 +205,7 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 		} 
 			
 		//else its some IO operation on some other socket 
-		for (i = 0; i < max_clients; i++) 
+		for (i = 1; i < max_clients; i++) 
 		{ 
 			sd = client_socket[i]; 
 				
@@ -228,10 +227,28 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 				//Echo back the message that came in 
 				else
 				{ 
+        read(sd, buffer, sizeof(buffer));
+        
+          for ( i = 0 ; i < max_clients ; i++) 
+                { 
+                        //socket descriptor 
+                        sd = client_socket[i]; 
+                                
+                        //if valid socket descriptor then add to read list 
+                      if(sd > 0) 
+        write(sd, (const char *)buffer, sizeof(buffer)); 
+        }       
+
+
+
+
+
+
+
 					//set the string terminating NULL byte on the end 
 					//of the data read 
-					buffer[valread] = '\0'; 
-					write(sd , buffer , strlen(buffer) ); 
+					//buffer[valread] = '\0'; 
+					//write(sd , buffer , strlen(buffer) ); 
 				} 
 			} 
 		} 
