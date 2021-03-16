@@ -101,8 +101,9 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	listen(sockfd, 10);
  	for (i = 0; i < max_clients; i++) 
         { 
-                client_socket[i] = 0; 
+                client_socket[i] = 0;  
         } 	
+            //    client_socket[0] = 0; 	
 
 
 }
@@ -145,25 +146,25 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
         //write(sd2, buffer, sizeof(buffer)); 
 	//break;
 	//}
-	if(FD_ISSET(0, &read_fd)){
-        read(0, buffer, sizeof(buffer));
+	//if(FD_ISSET(0, &read_fd)){
+        //read(0, buffer, sizeof(buffer));
         
-	  for ( i = 0 ; i < max_clients ; i++) 
-                { 
+	  //for ( i = 0 ; i < max_clients ; i++) 
+            //    { 
                         //socket descriptor 
-                        sd = client_socket[i]; 
+              //          sd = client_socket[i]; 
                                 
                         //if valid socket descriptor then add to read list 
-                      if(sd > 0) 
-	write(sd, (const char *)buffer, sizeof(buffer)); 
-	}	
+                //      if(sd > 0) 
+	//write(sd, (const char *)buffer, sizeof(buffer)); 
+	//}	
 
 
 
 
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
-        }
+        //}
 
 
 if (FD_ISSET(sockfd, &read_fd)) 
@@ -172,7 +173,7 @@ if (FD_ISSET(sockfd, &read_fd))
 		//close(sd2);      
 			while ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
-			close(new_socket);
+			//close(new_socket);
 			}
 
 
@@ -194,7 +195,7 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 			for (i = 0; i < max_clients; i++) 
 			{ 
 				//if position is empty 
-				if( client_socket[i] == 0 ) 
+				if( client_socket[i] == 0) 
 				{ 
 					client_socket[i] = new_socket; 
 					printf("Adding to list of sockets as %d\n" , i); 
@@ -222,6 +223,7 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 					//Close the socket and mark as 0 in list for reuse 
 					close( sd ); 
 					client_socket[i] = 0; 
+
 				} 
 					
 				//Echo back the message that came in 
@@ -237,8 +239,8 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
                         //if valid socket descriptor then add to read list 
                       if(sd > 0) 
         write(sd, (const char *)buffer, sizeof(buffer)); 
-        }       
-
+       if (i==max_clients-1)write(0, (const char *)buffer, 20);
+}       
 
 
 
