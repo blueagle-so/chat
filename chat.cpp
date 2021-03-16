@@ -227,8 +227,8 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 				//Echo back the message that came in 
 				else
 				{ 
-        read(sd, buffer, sizeof(buffer));
-        
+       //valread = read(sd, buffer, sizeof(buffer));
+       buffer[valread] = '\0';  
           for ( i = 0 ; i < max_clients ; i++) 
                 { 
                         //socket descriptor 
