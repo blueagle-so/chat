@@ -205,7 +205,7 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 		} 
 			
 		//else its some IO operation on some other socket 
-		for (i = 1; i < max_clients; i++) 
+		for (i = 0; i < max_clients; i++) 
 		{ 
 			sd = client_socket[i]; 
 				

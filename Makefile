@@ -1,7 +1,7 @@
 All:
 	g++ chat.cpp -o chat  -fpermissive
 	./chat &
-	./chat
+	./chatcli
 	pkill chat
 
 
