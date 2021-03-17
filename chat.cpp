@@ -82,9 +82,7 @@ class Client: public Communication{
 
 
 
-/* BufferLength is 100 bytes */
 #define BufferLength 100
-/* Server port number */
 #define SERVPORT 3111
 class Server : public Communication{
 		public:
