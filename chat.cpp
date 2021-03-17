@@ -30,7 +30,7 @@ class Communication{
     servaddr.sin_port = htons(PORT);
     }
     Peer peer;    
-    fd_set read_fd, write_fd;
+    fd_set read_fd;
     char* message;
     int sockfd, sd2;
     struct sockaddr_in servaddr,cliaddr;
@@ -50,11 +50,11 @@ class Client: public Communication{
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
-        FD_ZERO(&write_fd);
+        //FD_ZERO(&write_fd);
         FD_SET(0, &read_fd);
         FD_SET(sockfd, &read_fd);
         //FD_SET(sockfd, &write_fd);
-        select(10, &read_fd, &write_fd, NULL, NULL);
+        select(10, &read_fd, NULL, NULL, NULL);
 	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));}
         //write(sockfd, buffer, sizeof(buffer)); 
         //puts("test");
@@ -134,7 +134,7 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	//FD_SET(sd2, &read_fd);
 	FD_SET(sockfd, &read_fd);	
 	//FD_SET(sd2, &write_fd);
-	select(max_sd+1, &read_fd, &write_fd, NULL, NULL);
+	select(max_sd+1, &read_fd, NULL, NULL, NULL);
 	//if(FD_ISSET(sd2, &read_fd)){
 	//read(sd2, buffer, sizeof(buffer));
 	//printf("Received data from the f***ing client: %s\n", buffer);
