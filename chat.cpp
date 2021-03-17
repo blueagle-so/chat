@@ -33,10 +33,13 @@ class Communication{
     fd_set read_fd;
     char* message;
     int sockfd, sd2;
-    struct sockaddr_in servaddr,cliaddr;
+    struct sockaddr_in servaddr;
     virtual void run(){}
     char buffer[MAXLINE];
-
+        int sd;
+    //int totalcnt = 0, on = 1;
+int master_socket, addrlen, new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
+int max_sd;
 };
 
 class Client: public Communication{
@@ -86,31 +89,20 @@ class Client: public Communication{
 #define SERVPORT 3111
 class Server : public Communication{
 		public:
-    /* Variable and structure definitions. */
-    int sd;
-    //int totalcnt = 0, on = 1;
-int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 , activity, i , valread ; 
-	int max_sd; 
-
 	Server()
 	{
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 	listen(sockfd, 10);
  	for (i = 0; i < max_clients; i++) 
-        { 
                 client_socket[i] = 0;  
-        } 	
-            //    client_socket[0] = 0; 	
-
-
-}
+	}
 	void run(){
 //int sin_size = sizeof(struct sockaddr_in);
 //sd2 = accept(sockfd, (struct sockaddr *)&cliaddr, &sin_size);    	
 	//sd2 = accept(sockfd, NULL, NULL);
 	//sd2 = accept(sockfd, NULL, NULL);           
-	addrlen = sizeof(cliaddr); 
+	//addrlen = sizeof(cliaddr); 
 	for(;;){
 	FD_ZERO(&read_fd);	
         max_sd = sockfd; 
@@ -118,16 +110,13 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 		{ 
 			//socket descriptor 
 			sd = client_socket[i]; 
-				
 			//if valid socket descriptor then add to read list 
 			if(sd > 0) 
 				FD_SET( sd , &read_fd); 
-				
 			//highest file descriptor number, need it for the select function 
 			if(sd > max_sd) 
 				max_sd = sd; 
 		} 	
-
 	//FD_ZERO(&read_fd);
         //FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
@@ -163,26 +152,18 @@ int master_socket , addrlen , new_socket , client_socket[30], max_clients = 30 ,
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
         //}
-
-
 if (FD_ISSET(sockfd, &read_fd)) 
 		{
  	        //sd2=accept(sockfd, NULL, NULL);    
 		//close(sd2);      
-		
-
-	while ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+	while ((new_socket = accept(sockfd,NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 			//close(new_socket);
 			}
-
-
- 
 			//inform user of socket number - used in send and receive commands 
-printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
-	
-
-		write(new_socket, "welcome...", 20); 	
+//printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
+printf("New connection\n",new_socket);		
+write(new_socket, "welcome...", 20); 	
 			//send new connection greeting message 
 		//if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
 		//	{ 
@@ -190,7 +171,6 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 		//	} 
 				
 			puts("Welcome message sent successfully"); 
-				
 			//add new socket to array of sockets 
 			for (i = 0; i < max_clients; i++) 
 			{ 
@@ -199,17 +179,14 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 				{ 
 					client_socket[i] = new_socket; 
 					printf("Adding to list of sockets as %d\n" , i); 
-						
 					break; 
 				} 
 			} 
 		} 
-			
 		//else its some IO operation on some other socket 
 		for (i = 0; i < max_clients; i++) 
 		{ 
 			sd = client_socket[i]; 
-				
 			if (FD_ISSET( sd , &read_fd )) 
 			{ 
 				//Check if it was for closing , and also read the 
@@ -217,15 +194,12 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 				if ((valread = read( sd , buffer, 1024)) == 0) 
 				{ 
 					//Somebody disconnected , get his details and print 
-					getpeername(sd , (struct sockaddr*)&cliaddr , (socklen_t*)&addrlen); 
-					printf("Host disconnected , ip %s , port %d \n" , inet_ntoa(cliaddr.sin_addr) , ntohs(cliaddr.sin_port)); 
-						
+					//getpeername(sd , (struct sockaddr*)&cliaddr , (socklen_t*)&addrlen); 
+					//printf("Host disconnected , ip %s , port %d \n" , inet_ntoa(cliaddr.sin_addr) , ntohs(cliaddr.sin_port)); 
 					//Close the socket and mark as 0 in list for reuse 
 					close( sd ); 
 					client_socket[i] = 0; 
-
 				} 
-					
 				//Echo back the message that came in 
 				else
 				{ 
@@ -235,7 +209,6 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
                 { 
                         //socket descriptor 
                         sd = client_socket[i]; 
-                                
                         //if valid socket descriptor then add to read list 
                       if(sd > 0) 
         write(sd, (const char *)buffer, sizeof(buffer)); 
@@ -254,17 +227,6 @@ printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socke
 				} 
 			} 
 		} 
-
-
-
-
-
-
-
-
-
-
-
 //printfv("Received data from the econd client: %s\n", buffer);
 	}
 	close(sd2);
