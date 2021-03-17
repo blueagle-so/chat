@@ -304,13 +304,12 @@ Communication *comm;
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);
   servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-  //if (connect(sockfd, (struct sockaddr*)&servaddr,
- // sizeof(servaddr)) < 0) {
-//close (sockfd);
+  if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
+close (sockfd);
  comm=new Server();
-  //}else {close (sockfd);
-//comm=new Client();
-//}
+}else {close (sockfd);
+comm=new Client();
+}
     comm->run();
 
 
