@@ -171,7 +171,9 @@ if (FD_ISSET(sockfd, &read_fd))
 		{
  	        //sd2=accept(sockfd, NULL, NULL);    
 		//close(sd2);      
-			while ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+		
+
+	while ((new_socket = accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 			//close(new_socket);
 			}
