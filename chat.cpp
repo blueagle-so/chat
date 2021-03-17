@@ -36,7 +36,7 @@ class Communication{
     struct sockaddr_in servaddr;
     virtual void run(){}
     char buffer[MAXLINE];
-        int sd;
+       int sd;
     //int totalcnt = 0, on = 1;
 int master_socket, addrlen, new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
