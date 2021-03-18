@@ -4,3 +4,8 @@ V make echo server to chat
 V fix error client[0]
   make nick& connect to test
   remove cliaddt struct
+  Peer using
+
+
+\x.y--->  \x.q
+\x.z--->  
