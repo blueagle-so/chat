@@ -86,7 +86,7 @@ class Client: public Communication{
 
 
 #define BufferLength 100
-#define SERVPORT 3111
+//#define SERVPORT 3111
 class Server : public Communication{
 		public:
 	Server()
