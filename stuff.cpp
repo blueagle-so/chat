@@ -88,7 +88,7 @@ Q8:;if(!s.empty()) goto Q1a;
 //         mysql qsort O(n^1.5)
 
 //	   mysql qsort
-//delta   ---------------    acceleration
+//delta   ---------------  = constant  acceleration
 //	   my qsort
 
 
