@@ -3,11 +3,10 @@ V make multi client chat
 V make echo server to chat
 V fix error client[0]
   make nick& connect to test
-  remove cliaddt struct
+V remove cliaddt struct
   Peer using
 
-POEHAL
+CULTURES
+
 
 CRAFT
-
-\xy.xy
