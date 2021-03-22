@@ -37,7 +37,6 @@ class Communication{
     virtual void run(){}
     char buffer[MAXLINE];
        int sd;
-    //int totalcnt = 0, on = 1;
 int master_socket, addrlen, new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
 };
@@ -53,10 +52,8 @@ class Client: public Communication{
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
-        //FD_ZERO(&write_fd);
         FD_SET(0, &read_fd);
         FD_SET(sockfd, &read_fd);
-        //FD_SET(sockfd, &write_fd);
         select(10, &read_fd, NULL, NULL, NULL);
 	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));}
         //write(sockfd, buffer, sizeof(buffer)); 
@@ -66,15 +63,8 @@ class Client: public Communication{
 	//write(0, (const char *)buffer, sizeof(buffer));
 	printf("reciving data from server: %s\n",buffer);
 	}
-        //printf("Server-Echoing back to client...\n");}
-        //if(FD_ISSET(sockfd, &write_fd)) write(sockfd, buffer, sizeof(buffer)); 	
-	//char *p;
-        //int n;
-
-        //errno = 0;
-        ///scanf("%m[a-z]", &buffer);
-	}
-        close(sockfd);
+	}        
+	close(sockfd);
 
     }
     
@@ -197,6 +187,8 @@ write(new_socket, "welcome...", 20);
 					//getpeername(sd , (struct sockaddr*)&cliaddr , (socklen_t*)&addrlen); 
 					//printf("Host disconnected , ip %s , port %d \n" , inet_ntoa(cliaddr.sin_addr) , ntohs(cliaddr.sin_port)); 
 					//Close the socket and mark as 0 in list for reuse 
+				
+					printf("Host disconnected %d \n" , i); 
 					close( sd ); 
 					client_socket[i] = 0; 
 				} 
