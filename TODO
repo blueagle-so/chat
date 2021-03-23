@@ -6,8 +6,7 @@ V fix error client[0]
 V remove cliaddt struct
   Peer using
   use sprintf for to client output
+  new connection print to all client
 
 
-
-
-CHUCHMEK
+OLENI
