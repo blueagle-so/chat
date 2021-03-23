@@ -40,7 +40,7 @@ class Communication{
        int sd;
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
-};
+}* comm;
 
 class Client: public Communication{
     public:
@@ -239,7 +239,7 @@ dprintf(new_socket,"welcome %d\n",new_socket);
 int main(){
 
 
-Communication *comm;
+//Communication *comm;
 
  int sockfd;
 
