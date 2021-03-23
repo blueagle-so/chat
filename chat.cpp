@@ -38,7 +38,7 @@ class Communication{
     virtual void run(){}
     char buffer[MAXLINE];
        int sd;
-int master_socket, addrlen, new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
+int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
 };
 
@@ -74,10 +74,6 @@ class Client: public Communication{
 
 
 
-
-
-#define BufferLength 100
-//#define SERVPORT 3111
 class Server : public Communication{
 		public:
 	Server()

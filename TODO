@@ -5,4 +5,9 @@ V fix error client[0]
   make nick& connect to test
 V remove cliaddt struct
   Peer using
+  use sprintf for to client output
 
+
+
+
+CHUCHMEK
