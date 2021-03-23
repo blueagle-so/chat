@@ -154,10 +154,10 @@ if (FD_ISSET(sockfd, &read_fd))
 			//inform user of socket number - used in send and receive commands 
 //printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
 printf("New connection %d\n",new_socket);	
-write(new_socket, "welcome ", 20);
-//write (new_socket,new_socket,10); 
+//write(new_socket, "welcome ", 20);
+//write (new_socket,"new_socket",10); 
 
-//dprintf(new_socket,"welcone %d\n",new_socket);	
+dprintf(new_socket,"welcome %d\n",new_socket);	
 			//send new connection greeting message 
 		//if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
 		//	{ 
