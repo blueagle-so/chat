@@ -7,6 +7,5 @@ V remove cliaddt struct
   Peer using
   use sprintf for to client output
   new connection print to all client
-  make object comm
-
-OLENI
+V make object comm
+  fix two connections error

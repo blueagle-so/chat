@@ -40,7 +40,7 @@ class Communication{
        int sd;
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
-}* comm;
+}* communication;
 
 class Client: public Communication{
     public:
@@ -260,11 +260,11 @@ int main(){
   servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
 close (sockfd);
- comm=new Server();
+ communication=new Server();
 }else {close (sockfd);
-comm=new Client();
+communication=new Client();
 }
-    comm->run();
+    communication->run();
 
 
 
