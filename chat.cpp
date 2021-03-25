@@ -1,5 +1,4 @@
-#include <iostream> 
-#include <arpa/inet.h>
+ #include <arpa/inet.h>
  #include <errno.h>
  #include <netinet/in.h>
  #include <signal.h>
@@ -24,7 +23,7 @@ class Communication{
     Communication(){
     //message = "Hello Server";
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    memset(&servaddr, 0, sizeof(servaddr));
+    //memset(&servaddr, 0, sizeof(servaddr));
 
     // Filling server information
     servaddr.sin_family = AF_INET;
@@ -46,10 +45,11 @@ class Client: public Communication{
     public:
     Client(){
         servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-    }
+    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
+}
     void run()
     {
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+//    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
@@ -253,7 +253,7 @@ int main(){
   printf("socket creation failed");
   exit(0);
   }
-  memset(&servaddr, 0, sizeof(servaddr));
+  //memset(&servaddr, 0, sizeof(servaddr));
   // Filling server information
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);

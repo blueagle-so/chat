@@ -8,4 +8,4 @@ V remove cliaddt struct
   use sprintf for to client output
   new connection print to all client
 V make object comm
-  fix two connections error
+  fix two connections error(make diff port connection to chose cli or ser)
