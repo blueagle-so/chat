@@ -10,14 +10,14 @@
  #include <string.h>
  #define PORT 3111 
  #define MAXLINE 1024
-
+/*
 typedef struct {
 	int socket;
 	struct sockaddr_in addres;
 	char* message;
 	char buffer[MAXLINE];
 } Peer;
-
+*/
 class Communication{
     public:
     Communication(){
@@ -29,7 +29,7 @@ class Communication{
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
     }
-    Peer peer;    
+    //Peer peer;    
     fd_set read_fd;
     char* message;
     int sockfd, sd2;
@@ -56,7 +56,7 @@ class Client: public Communication{
         FD_SET(0, &read_fd);
         FD_SET(sockfd, &read_fd);
         select(10, &read_fd, NULL, NULL, NULL);
-	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));write(sockfd,buffer,sizeof(buffer));}
+	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));dprintf(sockfd,buffer);}  //write(sockfd,buffer,sizeof(buffer));}
         //write(sockfd, buffer, sizeof(buffer)); 
         //puts("test");
         if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
@@ -141,8 +141,8 @@ class Server : public Communication{
         //}
 if (FD_ISSET(sockfd, &read_fd)) 
 		{
- 	        //sd2=accept(sockfd, NULL, NULL);    
-		//close(sd2);      
+ 	 //sd2=accept(sockfd, NULL, NULL);    
+	//close(sd2);      
 	while ((new_socket = accept(sockfd,NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 			//close(new_socket);
@@ -202,9 +202,10 @@ dprintf(new_socket,"welcome %d\n",new_socket);
                         //socket descriptor 
                         sd = client_socket[i]; 
                         //if valid socket descriptor then add to read list 
-                      if(sd > 0) 
-        write(sd, (const char *)buffer, sizeof(buffer)); 
-       if (i==max_clients-1)write(0, (const char *)buffer, 20);
+                      if(sd > 0)
+dprintf(new_socket,buffer); 
+       // write(sd, (const char *)buffer, sizeof(buffer)); 
+       if (i==max_clients-1)printf("%s\n",buffer);//write(0, (const char *)buffer, 20);
 }       
 
 
