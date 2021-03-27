@@ -147,7 +147,11 @@ if (FD_ISSET(sockfd, &read_fd))
 			{ 
 			//close(new_socket);
 			}
-			//inform user of socket number - used in send and receive commands 
+			
+while ((new_socket = accept(sockfd,NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+				{}
+
+//inform user of socket number - used in send and receive commands 
 //printf("New connection , socket fd is %d , ip is : %s , port : %d\n" , new_socket , inet_ntoa(cliaddr.sin_addr) , ntohs	(cliaddr.sin_port)); 
 printf("New connection %d\n",new_socket);	
 //write(new_socket, "welcome ", 20);
