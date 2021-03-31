@@ -20,9 +20,6 @@
 
 using namespace std;
 
-// Merges two subarrays of arr[].
-// First subarray is arr[l..m]
-// Second subarray is arr[m+1..r]
 void merge(int arr[], int l, int m, int r)
 {
 	int n1 = m - l + 1;
@@ -90,13 +87,16 @@ void mergeSort(int arr[],int l,int r){
 	merge(arr,l,m,r);
 }
 
-// UTILITY FUNCTIONS
-// Function to print an array
-void printArray(int A[], int size)
-{
-	for (int i = 0; i < size; i++)
-		cout << A[i] << " ";
-}
+
+
+
+
+
+
+
+
+
+
 
 
 struct person
@@ -134,14 +134,57 @@ int k=0, arr[4000];
   }
 	// close file
        int n = sizeof(arr) / sizeof(arr[0]);
+int arr1[n/2];
+for(int i=0;i<n/2;i++)
+	arr1[i]=arr[i];
+int arr2[n/2];
+for (int i = n/2;i<4000;i++)
+	arr2[i-n/2]=arr[i];
 
 
-mergeSort(arr, 0, n - 1);
+
+
+
+
+
+
+mergeSort(arr1, 0, n/2);
+mergeSort(arr2, 0, n/2);
+
+
+
+
+
+
+
+
+
+
+
+
+
+M1:;int i=1,j=1;k=1;
+M2:;if(arr1[i]>=arr2[j])goto M5;
+M3:;arr[k]=arr1[i];k++;i++;if(i<=n/2)goto M2;
+M4:;for(int l=j;l<=n/2;l++){arr[k]=arr2[l];k++;}goto END;
+M5:;arr[k]=arr2[j];k++;i++;if(j<=n/2)goto M2;
+M6:;for(int l=i;l<=n/2;l++){arr[k]=arr1[l];k++;}
+END:;
+
+
+
+
+
+
+
+
+
+
+
+
 
 
         t = clock() - t;
-
-//printArray(arr,4000);
 
    printf (" time : %ld clicks (%f seconds).\n",t,((double)t)/CLOCKS_PER_SEC);
 
