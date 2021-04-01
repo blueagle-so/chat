@@ -37,14 +37,14 @@ void merge(int arr[], int l, int m, int r)
 	// Merge the temp arrays back into arr[l..r]
 
 	// Initial index of first subarray
-	int i = 0;
+	int i = 1;
 
 	// Initial index of second subarray
-	int j = 0;
+	int j = 1;
 
 	// Initial index of merged subarray
 	int k = l;
-
+/*
 	while (i < n1 && j < n2) {
 		if (L[i] <= R[j]) {
 			arr[k] = L[i];
@@ -72,6 +72,16 @@ void merge(int arr[], int l, int m, int r)
 		j++;
 		k++;
 	}
+*/
+M1:;//int i=1,j=1;k=1;
+M2:;if(L[i]>=R[j])goto M5;
+M3:;arr[k]=R[i];k++;i++;if(i<n1)goto M2;
+M4:;for(int l=j;l<=n2;l++){arr[k]=R[l];k++;}goto END;
+M5:;arr[k]=R[j];k++;i++;if(j<n2)goto M2;
+M6:;for(int l=i;l<=n1;l++){arr[k]=L[l];k++;}
+END:;
+
+
 }
 
 // l is for left index and r is
@@ -134,12 +144,15 @@ int k=0, arr[4000];
   }
 	// close file
        int n = sizeof(arr) / sizeof(arr[0]);
+
+/*
 int arr1[n/2];
 for(int i=0;i<n/2;i++)
 	arr1[i]=arr[i];
 int arr2[n/2];
 for (int i = n/2;i<4000;i++)
 	arr2[i-n/2]=arr[i];
+*/
 
 
 
@@ -147,12 +160,7 @@ for (int i = n/2;i<4000;i++)
 
 
 
-
-mergeSort(arr1, 0, n/2);
-mergeSort(arr2, 0, n/2);
-
-
-
+mergeSort(arr, 0, n);
 
 
 
@@ -162,6 +170,9 @@ mergeSort(arr2, 0, n/2);
 
 
 
+
+
+/*
 
 M1:;int i=1,j=1;k=1;
 M2:;if(arr1[i]>=arr2[j])goto M5;
@@ -172,7 +183,7 @@ M6:;for(int l=i;l<=n/2;l++){arr[k]=arr1[l];k++;}
 END:;
 
 
-
+*/
 
 
 
