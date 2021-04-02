@@ -62,7 +62,7 @@ int k=0;
 	// close file
        int n = sizeof(arr) / sizeof(arr[0]);
 
-
+//5.2.1 Knuth
 int i=0,j=0;
 struct person R;
 S1:;if(j>=n)goto END;

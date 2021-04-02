@@ -73,6 +73,10 @@ void merge(int arr[], int l, int m, int r)
 		k++;
 	}
 */
+
+
+
+//5.2.4 Knuth
 M1:;//int i=1,j=1;k=1;
 M2:;if(L[i]>=R[j])goto M5;
 M3:;arr[k]=R[i];k++;i++;if(i<n1)goto M2;
