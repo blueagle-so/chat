@@ -5,6 +5,7 @@ all:
 	g++ quicksort.c  -o quick
 	g++ merge.cpp -o merge
 	g++ mergeknuth.cpp -o mergeknuth
+	g++ mergeknuth1.cpp -o mergeknuth1
 
 	#g++ insertlist1.cpp -o insertlist1
 	#g++ insertlist2.cpp -o insertlist2
@@ -13,3 +14,4 @@ all:
 	./quick
 	./merge
 	./mergeknuth
+	./mergeknuth1
