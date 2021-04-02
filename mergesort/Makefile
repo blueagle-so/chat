@@ -1,6 +1,6 @@
 all:
 	gcc filestruct.c -o base
-	gcc insertsort.c -o insert
+	g++ insertknuth.c -o insertknuth
 	#gcc insertlist.c -o insertlist
 	g++ quicksort.c  -o quick
 	g++ merge.cpp -o merge
@@ -9,7 +9,7 @@ all:
 	#g++ insertlist1.cpp -o insertlist1
 	#g++ insertlist2.cpp -o insertlist2
 	./base
-	./insert
+	./insertknuth
 	./quick
 	./merge
 	./mergeknuth

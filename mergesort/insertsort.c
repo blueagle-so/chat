@@ -15,7 +15,7 @@ struct person
 int main ()
 {
 	FILE *infile;
-	struct person input, arr[4000], key;
+	struct person input, arr[40000], key;
 int k=0;
         clock_t t;
 

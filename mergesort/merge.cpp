@@ -111,7 +111,7 @@ int main ()
 {
 	FILE *infile;
 	struct person input, key;//arr[4000], key;
-int k=0, arr[4000];
+int k=0, arr[40000];
         clock_t t;
         t = clock();
 

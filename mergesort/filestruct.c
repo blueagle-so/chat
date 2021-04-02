@@ -30,7 +30,7 @@ int main ()
 	 struct person input3 = {3, "roh", "srma"};
    struct person input4 = {4, "ndra", "dhi"};
 	// write struct to file
-	for(int i=0;i<1000;i++){
+	for(int i=0;i<10000;i++){
 	fwrite (&input1, sizeof(struct person), 1, outfile);
 	fwrite (&input2, sizeof(struct person), 1, outfile);
 
