@@ -37,7 +37,7 @@ int main ()
 {
 	FILE *infile;
 	struct person input, key;//arr[4000], key;
-int e=0, arr[40000];
+int e=0, arr[80000];
         clock_t t;
         t = clock();
 
@@ -90,7 +90,7 @@ N11:;i++;if(arr[i-1]<=arr[i])goto N10;
 N12:;f=0;d=-d;o=k;k=l;l=o;goto N3; 
 
 N13:;if(f==0){s=1-s;goto N2;}else goto END;
-     //if(s==0)for(int p=n/2;p<=n;p++)arr[p-n/2]=arr[p];
+     if(s==0)for(int p=n/2;p<=n;p++)arr[p-n/2]=arr[p];
 END:;
 
 
