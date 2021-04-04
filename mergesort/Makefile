@@ -14,5 +14,4 @@ all:
 	./merge
 	./mergeknuth
 	./mergeknuth1
-	#wait five sec
-	./shellknuth
+	./fibonacci
