@@ -1,0 +1,13 @@
+diff --git a/mergesort/shellknuth.cpp b/mergesort/shellknuth.cpp
+index bbfabf6..bd53557 100644
+--- a/mergesort/shellknuth.cpp
++++ b/mergesort/shellknuth.cpp
+@@ -58,7 +58,7 @@ int k=0;
+ 
+ 
+ auto start = std::chrono::system_clock::now();
+-D1:;for(int s = n/2;s>0;s/=2+1){
++D1:;for(int s = n/2;s>0;s/=2){
+ D2:;for(int j=s+1;j<n;j++){
+ D3:;int i=j-s;int K=arr[j];
+ D4:;if ((K>arr[i])) goto D6;
