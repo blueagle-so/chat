@@ -8,7 +8,6 @@ all:
 	g++ shellknuth.cpp -o shellknuth
 	git apply fib
 	g++ shellknuth.cpp -o shellknuthfib	 
-	
 	#compile complite.
 	./base
 	#wait ten seconds.
