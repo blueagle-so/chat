@@ -6,6 +6,9 @@ all:
 	g++ mergeknuth.cpp -o mergeknuth
 	g++ mergeknuth1.cpp -o mergeknuth1
 	g++ shellknuth.cpp -o shellknuth
+	git apply fib
+	g++ shellknuth.cpp -o shellknuthfib	 
+	
 	#compile complite.
 	./base
 	#wait ten seconds.
@@ -14,4 +17,7 @@ all:
 	./merge
 	./mergeknuth
 	./mergeknuth1
-	./fibonacci
+	#wait 5 sec.
+	./shellknuth
+	#wain 4 sec.
+	./shellknuthfib
