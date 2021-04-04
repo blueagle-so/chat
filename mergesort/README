@@ -1,0 +1,3 @@
+shell sort  (shellsort1.cpp) containes shell sort from knuth
+in ve USE some numbers in D1 step we ken get high speed sort
+try to change step of for() from s/=2+1 to s/=2
