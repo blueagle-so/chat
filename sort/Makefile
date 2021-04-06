@@ -7,7 +7,7 @@ all:
 	g++ mergeknuth1.cpp -o mergeknuth1
 	g++ shellknuth.cpp -o shellknuth
 	git apply fib
-	g++ shellknuth.cpp 	 
+	#g++ shellknuth.cpp 	 
 	git apply unfib
 	#compile complite.
 	
