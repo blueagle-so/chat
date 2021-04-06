@@ -7,7 +7,7 @@ all:
 	g++ mergeknuth1.cpp -o mergeknuth1
 	g++ shellknuth.cpp -o shellknuth
 	git apply fib
-	g++ shellknuth.cpp -o shellknuthfib	 
+	g++ shellknuth.cpp 	 
 	git apply unfib
 	#compile complite.
 	
@@ -21,4 +21,4 @@ all:
 	#wait 5 sec.
 	./shellknuth
 	#wain 4 sec.
-	./shellknuthfib
+	./a.out
