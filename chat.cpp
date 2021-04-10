@@ -20,7 +20,7 @@ typedef struct {
 */
 #define коммуникация communication
 #define Глав main
-
+#define запуск run
 
 class Communication{
     public:
@@ -273,8 +273,6 @@ close (sockfd);
 }else {close (sockfd);
 communication=new Client();
 }
-    коммуникация->run();
-
-
+    коммуникация->запуск();
 
 }
