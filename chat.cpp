@@ -18,6 +18,10 @@ typedef struct {
 	char buffer[MAXLINE];
 } Peer;
 */
+#define коммуникация communication
+#define Глав main
+
+
 class Communication{
     public:
     Communication(){
@@ -44,7 +48,7 @@ int max_sd;
 class Client: public Communication{
     public:
     Client(){
-        servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        servaddr.sin_addr.s_addr = inet_addr("192.168.1.153");
     connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
 }
     void run()
@@ -241,7 +245,7 @@ dprintf(new_socket,buffer);
 
 
 
-int main(){
+int Глав(){
 
 
 //Communication *comm;
@@ -262,14 +266,14 @@ int main(){
   // Filling server information
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);
-  servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  servaddr.sin_addr.s_addr = inet_addr("192.168.1.153");
   if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
 close (sockfd);
  communication=new Server();
 }else {close (sockfd);
 communication=new Client();
 }
-    communication->run();
+    коммуникация->run();
 
 
 

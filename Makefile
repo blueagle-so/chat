@@ -1,5 +1,5 @@
 All:
-	g++ chat.cpp -o chat  -fpermissive
+	clang++ chat.cpp -o chat  -fpermissive
 	#./chat &
 	./chat
 
