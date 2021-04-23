@@ -49,11 +49,11 @@ class Client: public Communication{
     public:
     Client(){
         servaddr.sin_addr.s_addr = inet_addr("192.168.1.153");
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
+    //connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
 }
     void run()
     {
-//    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
