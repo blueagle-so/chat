@@ -48,7 +48,7 @@ int max_sd;
 class Client: public Communication{
     public:
     Client(){
-        servaddr.sin_addr.s_addr = inet_addr("192.168.1.153");
+        servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
     //connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
 }
     void run()
@@ -211,7 +211,7 @@ dprintf(new_socket,"welcome %d\n",new_socket);
                         sd = client_socket[i]; 
                         //if valid socket descriptor then add to read list 
                       if(sd > 0)
-dprintf(new_socket,buffer); 
+dprintf(sd,buffer); 
        // write(sd, (const char *)buffer, sizeof(buffer)); 
        if (i==max_clients-1)printf("%s\n",buffer);//write(0, (const char *)buffer, 20);
 }       
@@ -266,7 +266,7 @@ int Глав(){
   // Filling server information
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);
-  servaddr.sin_addr.s_addr = inet_addr("192.168.1.153");
+  servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
   if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
 close (sockfd);
  communication=new Server();
