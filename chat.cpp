@@ -48,7 +48,7 @@ int max_sd;
 class Client: public Communication{
     public:
     Client(){
-        servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        servaddr.sin_addr.s_addr = inet_addr("192.168.1.177");
     //connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));    
 }
     void run()
@@ -266,7 +266,7 @@ int Глав(){
   // Filling server information
   servaddr.sin_family = AF_INET;
   servaddr.sin_port = htons(PORT);
-  servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+  servaddr.sin_addr.s_addr = inet_addr("192.168.1.177");
   if (connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
 close (sockfd);
  communication=new Server();
