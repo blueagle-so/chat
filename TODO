@@ -4,7 +4,7 @@ V make echo server to chat
 V fix error client[0]
   make nick& connect to test
 V remove cliaddt struct
-  Peer using
++ Peer using
 V use dprintf for to client output
   new connection print to all client
 V make object comm

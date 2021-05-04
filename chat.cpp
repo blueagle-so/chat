@@ -10,14 +10,14 @@
  #include <string.h>
  #define PORT 3111 
  #define MAXLINE 1024
-/*
+
 typedef struct {
 	int socket;
 	struct sockaddr_in addres;
 	char* message;
 	char buffer[MAXLINE];
 } Peer;
-*/
+
 #define коммуникация communication
 #define Глав main
 #define запуск run
@@ -33,7 +33,7 @@ class Communication{
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
     }
-    //Peer peer;    
+    Peer peer;    
     fd_set read_fd;
     char* message;
     int sockfd, sd2;
