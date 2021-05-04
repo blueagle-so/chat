@@ -36,11 +36,10 @@ class Communication{
     Peer peer;    
     fd_set read_fd;
     char* message;
-    int sockfd, sd2;
+    int sockfd, sd, sd2;
     struct sockaddr_in servaddr;
     virtual void run(){}
     char buffer[MAXLINE];
-       int sd;
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
 }* communication;
