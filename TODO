@@ -12,3 +12,4 @@ V fix two connections error(make diff port connection to chose cli or ser)
   in server class fix confirmation of welcome
 V fix allsend error (send not all)
   tcp scanner for server
+
