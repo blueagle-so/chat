@@ -38,7 +38,7 @@ class Communication{
     char* message;
     int sockfd, sd, sd2;
     struct sockaddr_in servaddr;
-    virtual void run(){}
+    virtual void run()=0;
     char buffer[MAXLINE];
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
