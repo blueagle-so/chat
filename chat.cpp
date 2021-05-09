@@ -66,6 +66,7 @@ class Client: public Communication{
 	//puts("reciving data from server: ");
 	//write(0, (const char *)buffer, sizeof(buffer));
 	//printf("reciving data from server: %s\n",buffer);
+	dprintf(0, "server: "); 	
 	dprintf(0,buffer);	
 	}
 	}        
