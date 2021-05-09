@@ -65,7 +65,8 @@ class Client: public Communication{
         if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
 	//puts("reciving data from server: ");
 	//write(0, (const char *)buffer, sizeof(buffer));
-	printf("reciving data from server: %s\n",buffer);
+	//printf("reciving data from server: %s\n",buffer);
+	dprintf(0,buffer);	
 	}
 	}        
 	close(sockfd);
@@ -84,8 +85,7 @@ class Server : public Communication{
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
 	bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
 	listen(sockfd, 10);
- 	for (i = 0; i < max_clients; i++) 
-                client_socket[i] = 0;  
+ 	for (i = 0; i < max_clients; i++) client_socket[i] = 0;  
 	}
 	void run(){
 //int sin_size = sizeof(struct sockaddr_in);
