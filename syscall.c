@@ -1,8 +1,14 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <sys/syscall.h>
+       #include <unistd.h>
+       #include <sys/syscall.h>
+       #include <sys/types.h>
+       #include <signal.h>
 
-int main() {
-        printf("%ld\n", syscall(__NR_socket));
-        return 0;
-}
+       int
+       main(int argc, char *argv[])
+       {
+           pid_t tid;
+
+           tid = syscall(SYS_socket);
+           //syscall(SYS_tgkill, getpid(), tid, SIGHUP);
+	printf("%i\n", tid);
+       }
