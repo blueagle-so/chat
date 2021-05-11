@@ -6,7 +6,8 @@
  #include <stdlib.h>
  #include <sys/socket.h>
  #include <sys/types.h>
- #include <unistd.h>
+#include <sys/syscall.h>
+#include <unistd.h>
  #include <string.h>
  #define PORT 3111 
  #define MAXLINE 1024
@@ -26,7 +27,7 @@ class Communication{
     public:
     Communication(){
     //message = "Hello Server";
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    sockfd = syscall(SYS_socket,AF_INET, SOCK_STREAM, 0);
     //memset(&servaddr, 0, sizeof(servaddr));
 
     // Filling server information
