@@ -24,10 +24,10 @@ typedef struct {
 #define запуск run
 
 class Communication{
-    public:
+	public:
     Communication(){
     //message = "Hello Server";
-    sockfd = syscall(SYS_socket,AF_INET, SOCK_STREAM, 0);
+    SetSocket(syscall(SYS_socket,AF_INET, SOCK_STREAM, 0));
     //memset(&servaddr, 0, sizeof(servaddr));
 
     // Filling server information
@@ -37,12 +37,16 @@ class Communication{
     Peer peer;    
     fd_set read_fd;
     char* message;
-    int sockfd, sd, sd2;
+    int  sd, sd2;
     struct sockaddr_in servaddr;
     virtual void run()=0;
     char buffer[MAXLINE];
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
+	int GetSocket(){return sockfd;}
+	void SetSocket(int sock){sockfd=sock;}
+	private:
+    int sockfd;
 }* communication;
 
 class Client: public Communication{
@@ -53,17 +57,17 @@ class Client: public Communication{
 }
     void run()
     {
-    connect(sockfd, (struct sockaddr*)&servaddr, sizeof(servaddr));
+    connect(GetSocket(), (struct sockaddr*)&servaddr, sizeof(servaddr));
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
 	FD_ZERO(&read_fd);
         FD_SET(0, &read_fd);
-        FD_SET(sockfd, &read_fd);
+        FD_SET(GetSocket(), &read_fd);
         select(10, &read_fd, NULL, NULL, NULL);
-	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));dprintf(sockfd,buffer);}  //write(sockfd,buffer,sizeof(buffer));}
+	if (FD_ISSET(0, &read_fd)){read(0,buffer,sizeof(buffer));dprintf(GetSocket(),buffer);}  //write(sockfd,buffer,sizeof(buffer));}
         //write(sockfd, buffer, sizeof(buffer)); 
         //puts("test");
-        if(FD_ISSET(sockfd, &read_fd)){read(sockfd, buffer, sizeof(buffer));
+        if(FD_ISSET(GetSocket(), &read_fd)){read(GetSocket(), buffer, sizeof(buffer));
 	//puts("reciving data from server: ");
 	//write(0, (const char *)buffer, sizeof(buffer));
 	//printf("reciving data from server: %s\n",buffer);
@@ -71,7 +75,7 @@ class Client: public Communication{
 	dprintf(0,buffer);	
 	}
 	}        
-	close(sockfd);
+	close(GetSocket());
 
     }
     
@@ -85,8 +89,8 @@ class Server : public Communication{
 	Server()
 	{
 	servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-	bind(sockfd, (struct sockaddr *)&servaddr, sizeof(servaddr));
-	listen(sockfd, 10);
+	bind(GetSocket(), (struct sockaddr *)&servaddr, sizeof(servaddr));
+	listen(GetSocket(), 10);
  	for (i = 0; i < max_clients; i++) client_socket[i] = 0;  
 	}
 	void run(){
@@ -97,7 +101,7 @@ class Server : public Communication{
 	//addrlen = sizeof(cliaddr); 
 	for(;;){
 	FD_ZERO(&read_fd);	
-        max_sd = sockfd; 
+        max_sd = GetSocket(); 
 	for ( i = 0 ; i < max_clients ; i++) 
 		{ 
 			//socket descriptor 
@@ -113,7 +117,7 @@ class Server : public Communication{
         //FD_ZERO(&write_fd);
 	FD_SET(0, &read_fd);
 	//FD_SET(sd2, &read_fd);
-	FD_SET(sockfd, &read_fd);	
+	FD_SET(GetSocket(), &read_fd);	
 	//FD_SET(sd2, &write_fd);
 	select(max_sd+1, &read_fd, NULL, NULL, NULL);
 	//if(FD_ISSET(sd2, &read_fd)){
@@ -144,16 +148,16 @@ class Server : public Communication{
 	//printf("Received data from the f***ing client: %s\n", buffer);
         //printf("Server-Echoing back to client...\n");
         //}
-if (FD_ISSET(sockfd, &read_fd)) 
+if (FD_ISSET(GetSocket(), &read_fd)) 
 		{
  	 //sd2=accept(sockfd, NULL, NULL);    
 	//close(sd2);      
-	while ((new_socket = accept(sockfd,NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+	while ((new_socket = accept(GetSocket(),NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 			//close(new_socket);
 			}
 			
-while ((new_socket = accept(sockfd,NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+while ((new_socket = accept(GetSocket(),NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 				{}
 
 //inform user of socket number - used in send and receive commands 
@@ -232,7 +236,7 @@ dprintf(sd,buffer);
 //printfv("Received data from the econd client: %s\n", buffer);
 	}
 	close(sd2);
-	close(sockfd);
+	close(GetSocket());
 	/*exit(0);*/
 	/*return 0;*/
 	}
