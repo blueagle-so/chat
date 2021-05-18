@@ -43,10 +43,10 @@ class Communication{
     char buffer[MAXLINE];
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
-	int GetSocket(){return sockfd;}
-	void SetSocket(int sock){sockfd=sock;}
+	int GetSocket(){return name;}
+	void SetSocket(int sock){name=sock;}
 	private:
-    int sockfd;
+    int name;
 }* communication;
 
 class Client: public Communication{
