@@ -14,3 +14,4 @@ V fix allsend error (send not all)
   tcp scanner for server
   inheritance interface set get private nedopolnim
   write nedopolnim class for client & server inheritance
+  creation socket

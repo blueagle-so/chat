@@ -27,9 +27,13 @@ class Communication{
 	public:
     Communication(){
     //message = "Hello Server";
-    SetSocket(syscall(SYS_socket,AF_INET, SOCK_STREAM, 0));
+    //SetSocket(syscall(SYS_socket,AF_INET, SOCK_STREAM, 0));
     //memset(&servaddr, 0, sizeof(servaddr));
-
+ if ( SetSocket(socket(AF_INET, SOCK_STREAM, 0)))  {
+}else{
+  printf("socket creation failed");
+  exit(0);
+  }
     // Filling server information
     servaddr.sin_family = AF_INET;
     servaddr.sin_port = htons(PORT);
@@ -44,7 +48,7 @@ class Communication{
 int new_socket, client_socket[30], max_clients = 30, activity, i, valread; 
 int max_sd;
 	int GetSocket(){return name;}
-	void SetSocket(int sock){name=sock;}
+	int SetSocket(int sock){name=sock;return name;}
 	private:
     int name;
 }* communication;
