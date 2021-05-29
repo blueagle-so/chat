@@ -26,9 +26,9 @@ int main(void) {
    while (1) {
       XNextEvent(d, &e);
       if (e.type == Expose) {
-         XDrawRectangle(d, w, DefaultGC(d, s), 20, 20, 10, 10);
-	 XDrawRectangle(d, w, DefaultGC(d, s), 40, 20, 10, 10);         
-	 XDrawRectangle(d, w, DefaultGC(d, s), 60, 20, 10, 10);
+         XDrawRectangle(d, w, DefaultGC(d, s), 0, 0, 100, 35);
+	 XDrawRectangle(d, w, DefaultGC(d, s), 0, 35, 50, 75);         
+	 //XDrawRectangle(d, w, DefaultGC(d, s), 40, 50, 50, 10);
 	//XDrawString(d, w, DefaultGC(d, s), 10, 50, msg, strlen(msg));
       }
       if (e.type == KeyPress)
