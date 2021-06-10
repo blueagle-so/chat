@@ -29,7 +29,7 @@ class Communication{
     //message = "Hello Server";
     //SetSocket(syscall(SYS_socket,AF_INET, SOCK_STREAM, 0));
     //memset(&servaddr, 0, sizeof(servaddr));
- if ( SetSocket(socket(AF_INET, SOCK_STREAM, 0)))  {
+ if ( SetSocket(socket(AF_INET, SOCK_STREAM, 0)))  {//man socket
 }else{
   printf("socket creation failed");
   exit(0);
@@ -64,6 +64,7 @@ class Client: public Communication{
     connect(GetSocket(), (struct sockaddr*)&servaddr, sizeof(servaddr));
 	for(;;){
 	memset(buffer, 0, sizeof(buffer));
+	//man select
 	FD_ZERO(&read_fd);
         FD_SET(0, &read_fd);
         FD_SET(GetSocket(), &read_fd);
@@ -123,7 +124,7 @@ class Server : public Communication{
 	//FD_SET(sd2, &read_fd);
 	FD_SET(GetSocket(), &read_fd);	
 	//FD_SET(sd2, &write_fd);
-	select(max_sd+1, &read_fd, NULL, NULL, NULL);
+	select(max_sd+1, &read_fd, NULL, NULL, NULL);//man select
 	//if(FD_ISSET(sd2, &read_fd)){
 	//read(sd2, buffer, sizeof(buffer));
 	//printf("Received data from the f***ing client: %s\n", buffer);
@@ -156,7 +157,8 @@ if (FD_ISSET(GetSocket(), &read_fd))
 		{
  	 //sd2=accept(sockfd, NULL, NULL);    
 	//close(sd2);      
-	while ((new_socket = accept(GetSocket(),NULL,NULL))<=0)//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
+	while ((new_socket = accept(GetSocket(),NULL,NULL))<=0)//man accept
+//accept(sockfd,(struct sockaddr *)&cliaddr, (socklen_t*)&addrlen))<=0) 
 			{ 
 			//close(new_socket);
 			}
@@ -198,7 +200,7 @@ dprintf(new_socket,"welcome %d\n",new_socket);
 			{ 
 				//Check if it was for closing , and also read the 
 				//incoming message 
-				if ((valread = read( sd , buffer, 1024)) == 0) 
+				if ((valread = read( sd , buffer, 1024)) == 0)//man read 
 				{ 
 					//Somebody disconnected , get his details and print 
 					//getpeername(sd , (struct sockaddr*)&cliaddr , (socklen_t*)&addrlen); 
