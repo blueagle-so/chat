@@ -1,0 +1,5 @@
+voda  ne voda(led)  ne led(voda) ,   A not (not A)
+
+ P=>A  &  notP=>notA  if (P=>notA)=false
+dihotomy P prin A or notA
+not (P & notP) 
