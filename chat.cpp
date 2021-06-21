@@ -32,7 +32,8 @@ class Communication{
  if ( SetSocket(socket(AF_INET, SOCK_STREAM, 0)))  {//man socket
 }else{
   printf("socket creation failed");
-  exit(0);
+ // exit(0);
+//return 0;
   }
     // Filling server information
     servaddr.sin_family = AF_INET;
@@ -271,7 +272,8 @@ int Глав(){
   // Creating socket file descriptor
   if ((sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
   printf("socket creation failed");
-  exit(0);
+  //exit(0);
+return 0;
   }
   //memset(&servaddr, 0, sizeof(servaddr));
   // Filling server information
